@@ -11,22 +11,30 @@
 <body <?php body_class(); ?>>
     <div class="noise-bg"></div>
 
+    <?php
+    // Получаем настройки из ACF для верхней панели
+    $toggle_text = get_field('accessibility_toggle_text', 'option') ?: 'Для слабозорих';
+    $font_label = get_field('accessibility_font_label', 'option') ?: 'Розмір шрифту:';
+    $theme_label = get_field('accessibility_theme_label', 'option') ?: 'Тема:';
+    $reset_text = get_field('accessibility_reset_text', 'option') ?: 'Скинути все';
+    ?>
+
     <!-- Панель доступності для слабозорих -->
     <div class="accessibility-panel" id="accessibility-panel">
         <div class="container accessibility-inner">
             <button class="accessibility-toggle" id="accessibility-toggle" aria-label="Версія для слабозорих">
                 <span class="accessibility-icon">👁️</span>
-                <span class="accessibility-text">Для слабозорих</span>
+                <span class="accessibility-text"><?php echo esc_html($toggle_text); ?></span>
             </button>
             <div class="accessibility-controls" id="accessibility-controls">
                 <div class="accessibility-group">
-                    <span class="accessibility-label">Розмір шрифту:</span>
+                    <span class="accessibility-label"><?php echo esc_html($font_label); ?></span>
                     <button class="accessibility-btn" id="font-decrease" aria-label="Зменшити шрифт">A-</button>
                     <button class="accessibility-btn" id="font-reset" aria-label="Скинути шрифт">A</button>
                     <button class="accessibility-btn" id="font-increase" aria-label="Збільшити шрифт">A+</button>
                 </div>
                 <div class="accessibility-group">
-                    <span class="accessibility-label">Тема:</span>
+                    <span class="accessibility-label"><?php echo esc_html($theme_label); ?></span>
                     <button class="accessibility-btn theme-btn" id="theme-normal" aria-label="Звичайна тема"
                         title="Звичайна">🌙</button>
                     <button class="accessibility-btn theme-btn" id="theme-contrast" aria-label="Контрастна тема"
@@ -34,7 +42,7 @@
                     <button class="accessibility-btn theme-btn" id="theme-light" aria-label="Світла тема"
                         title="Світла">⬜</button>
                 </div>
-                <button class="accessibility-btn reset-all" id="reset-all">Скинути все</button>
+                <button class="accessibility-btn reset-all" id="reset-all"><?php echo esc_html($reset_text); ?></button>
             </div>
         </div>
     </div>
