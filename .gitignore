@@ -1,0 +1,5 @@
+.history/
+.vscode/
+wp-config.php
+.htaccess
+*.sql
