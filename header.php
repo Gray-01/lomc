@@ -47,13 +47,21 @@
         </div>
     </div>
 
+    <?php
+    // Получаем настройки логотипа из ACF (один раз, используется и в header и в footer)
+    $logo_text = get_field('logo_text', 'option') ?: 'ЛОМЦСНІХ';
+    ?>
+
     <header class="top-nav">
         <div class="container nav-inner">
             <div class="brand">
                 <div class="brand-mark">
-                    <a href="<?php echo esc_url(home_url('/')); ?>">ЛОМЦСНІХ</a>
+                    <a href="<?php echo esc_url(home_url('/')); ?>">
+                        <?php echo esc_html($logo_text); ?>
+                    </a>
                 </div>
             </div>
+
             <nav class="nav-links" id="nav-links">
                 <?php
                 // Получаем текущий URL для проверки активного пункта меню

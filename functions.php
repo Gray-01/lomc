@@ -3,7 +3,7 @@
 function lomcsnih_add_favicon() {
     echo '<link rel="icon" type="image/svg+xml" href="' . get_template_directory_uri() . '/assets/images/favicon.svg">';
 }
-add_action('wp_head', 'lomcsnih_add_favicon');
+add_action('wp_head', 'lomcsnih_add_favicon', 5);
 
 // Подключаем стили, скрипты и шрифты
 function lomcsnih_enqueue_assets() {
@@ -59,7 +59,36 @@ if (function_exists('acf_add_options_page')) {
     ));
 }
 
-// Динамические стили ТОЛЬКО для панели доступности
+// Динамические стили для логотипа - приоритет 15
+function lomcsnih_logo_styles() {
+    // Получаем цвета логотипа из ACF
+    $logo_bg_color_1 = get_field('logo_bg_color_1', 'option') ?: '#59f0ff';
+    $logo_bg_color_2 = get_field('logo_bg_color_2', 'option') ?: '#7c6bff';
+    $logo_text_color = get_field('logo_text_color', 'option') ?: '#070c1a';
+
+    ?>
+    <style id="lomcsnih-logo-styles">
+        /* Стили для логотипа ВЕЗДЕ (header и footer) */
+        .brand-mark {
+            background: linear-gradient(120deg, <?php echo esc_attr($logo_bg_color_1); ?>, <?php echo esc_attr($logo_bg_color_2); ?>) !important;
+            color: <?php echo esc_attr($logo_text_color); ?> !important;
+        }
+
+        .brand-mark a {
+            color: <?php echo esc_attr($logo_text_color); ?> !important;
+            text-decoration: none !important;
+        }
+
+        .brand-mark a:hover {
+            color: <?php echo esc_attr($logo_text_color); ?> !important;
+            opacity: 0.9 !important;
+        }
+    </style>
+    <?php
+}
+add_action('wp_head', 'lomcsnih_logo_styles', 15);
+
+// Динамические стили для панели доступности - приоритет 16
 function lomcsnih_accessibility_styles() {
     // Получаем цвета из ACF
     $panel_bg = get_field('panel_bg_color', 'option') ?: 'rgba(7, 12, 26, 0.95)';
@@ -73,7 +102,7 @@ function lomcsnih_accessibility_styles() {
     if ($panel_bg || $button_bg || $button_text || $button_border || $button_hover_bg || $button_hover_border) {
         ?>
         <style id="lomcsnih-accessibility-styles">
-            /* Стили ТОЛЬКО для панели доступности - не затрагивают CSS переменные! */
+            /* Стили ТОЛЬКО для панели доступности */
             .accessibility-panel {
                 background: <?php echo esc_attr($panel_bg); ?> !important;
                 border-bottom: 1px solid <?php echo esc_attr($button_border); ?> !important;
@@ -134,5 +163,4 @@ function lomcsnih_accessibility_styles() {
         <?php
     }
 }
-// Приоритет 20 - чтобы шло ПОСЛЕ основного CSS файла
-add_action('wp_head', 'lomcsnih_accessibility_styles', 20);
+add_action('wp_head', 'lomcsnih_accessibility_styles', 16);
