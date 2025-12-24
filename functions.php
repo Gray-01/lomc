@@ -326,3 +326,32 @@ function lomcsnih_menu_styles() {
     <?php
 }
 add_action('wp_head', 'lomcsnih_menu_styles', 17); // Приоритет 17 - после логотипа (15) и панели (16)
+
+// Динамические стили для телефона/ссылки в меню
+function lomcsnih_nav_phone_styles() {
+    // Получаем цвет из ACF
+    $nav_phone_color = get_field('nav_phone_color', 'option') ?: '#e7ecf5';
+
+    ?>
+    <style id="lomcsnih-nav-phone-styles">
+        /* Стили для телефона/ссылки в меню */
+        .nav-phone-wrapper,
+        .nav-phone-wrapper a,
+        .nav-phone-wrapper .phone,
+        .nav-cta .phone {
+            color: <?php echo esc_attr($nav_phone_color); ?> !important;
+            font-weight: 700 !important;
+            text-decoration: none !important;
+            cursor: pointer !important;
+            transition: opacity 0.2s ease !important;
+        }
+
+        .nav-phone-wrapper a:hover,
+        .nav-phone-wrapper .phone:hover,
+        .nav-cta .phone:hover {
+            opacity: 0.8 !important;
+        }
+    </style>
+    <?php
+}
+add_action('wp_head', 'lomcsnih_nav_phone_styles', 18); // Приоритет 18 - после всего

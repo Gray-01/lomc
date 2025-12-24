@@ -110,10 +110,26 @@
 
 
             <div class="nav-cta">
-                <a class="phone" href="tel:+380506833065">(050) 683-30-65</a>
+                <?php
+                // Получаем настройки телефона/ссылки из ACF
+                $nav_phone_content = get_field('nav_phone_link', 'option');
+                $nav_phone_color = get_field('nav_phone_color', 'option') ?: '#e7ecf5';
+
+                // Если есть контент из ACF
+                if ($nav_phone_content) {
+                    echo '<div class="nav-phone-wrapper" style="color: ' . esc_attr($nav_phone_color) . ';">';
+                    echo apply_filters('the_content', $nav_phone_content);
+                    echo '</div>';
+                } else {
+                    // Запасной вариант
+                    echo '<a class="phone" href="tel:+380506833065" style="color: ' . esc_attr($nav_phone_color) . ';">(050) 683-30-65</a>';
+                }
+                ?>
+
                 <button class="burger" id="burger" aria-label="Відкрити меню">
                     <span></span><span></span><span></span>
                 </button>
             </div>
+
         </div>
     </header>
