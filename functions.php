@@ -292,3 +292,37 @@ class Lomcsnih_Nav_Walker extends Walker_Nav_Menu {
         }
     }
 }
+
+// Динамические стили для меню
+function lomcsnih_menu_styles() {
+    // Получаем цвета меню из ACF
+    $menu_text_color = get_field('menu_text_color', 'option') ?: '#a8b3c7';
+    $menu_hover_text_color = get_field('menu_hover_text_color', 'option') ?: '#e7ecf5';
+    $menu_hover_bg_color = get_field('menu_hover_bg_color', 'option') ?: 'rgba(255, 255, 255, 0.06)';
+
+    ?>
+    <style id="lomcsnih-menu-styles">
+        /* Стили для меню */
+        .nav-links .nav-link {
+            color: <?php echo esc_attr($menu_text_color); ?> !important;
+        }
+
+        .nav-links .nav-link:hover,
+        .nav-links .nav-link.active {
+            color: <?php echo esc_attr($menu_hover_text_color); ?> !important;
+            background: <?php echo esc_attr($menu_hover_bg_color); ?> !important;
+        }
+
+        /* Dropdown меню */
+        .nav-links .dropdown-menu a {
+            color: <?php echo esc_attr($menu_text_color); ?> !important;
+        }
+
+        .nav-links .dropdown-menu a:hover {
+            color: <?php echo esc_attr($menu_hover_text_color); ?> !important;
+            background: <?php echo esc_attr($menu_hover_bg_color); ?> !important;
+        }
+    </style>
+    <?php
+}
+add_action('wp_head', 'lomcsnih_menu_styles', 17); // Приоритет 17 - после логотипа (15) и панели (16)
