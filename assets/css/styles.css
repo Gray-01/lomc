@@ -902,7 +902,7 @@ h2 {
     .portrait-grid {
         grid-template-columns: repeat(3, 1fr);
     }
-    
+
     .portrait-card.main {
         grid-column: span 1;
     }
@@ -938,7 +938,7 @@ h2 {
         width: 100%;
     }
 
-    .nav-dropdown > .nav-link {
+    .nav-dropdown>.nav-link {
         width: 100%;
         display: block;
     }
@@ -968,7 +968,7 @@ h2 {
     .portrait-grid {
         grid-template-columns: repeat(2, 1fr);
     }
-    
+
     .portrait-card.main {
         grid-column: span 2;
     }
@@ -1004,7 +1004,7 @@ h2 {
     .portrait-grid {
         grid-template-columns: 1fr;
     }
-    
+
     .portrait-card.main {
         grid-column: span 1;
     }
@@ -1019,3 +1019,134 @@ h2 {
     }
 }
 
+/* WordPress меню */
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+/* Обычные ссылки меню */
+.nav-links .nav-link {
+    padding: 8px 12px;
+    border-radius: 12px;
+    color: var(--muted);
+    transition: color 0.2s ease, background 0.2s ease;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    display: inline-block;
+    text-decoration: none;
+}
+
+.nav-links .nav-link:hover,
+.nav-links .nav-link.active {
+    color: var(--text);
+    background: var(--card);
+}
+
+/* Dropdown контейнер */
+.nav-links .nav-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.nav-links .dropdown-arrow {
+    font-size: 0.7rem;
+    margin-left: 2px;
+    transition: transform 0.2s ease;
+}
+
+.nav-links .nav-dropdown:hover .dropdown-arrow {
+    transform: rotate(180deg);
+}
+
+/* Dropdown меню (скрыто по умолчанию) */
+.nav-links .dropdown-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    min-width: 220px;
+    background: rgba(7, 12, 26, 0.95);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 8px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: all 0.2s ease;
+    z-index: 100;
+    backdrop-filter: blur(16px);
+}
+
+.nav-links .nav-dropdown:hover .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(4px);
+}
+
+/* Пункты внутри dropdown */
+.nav-links .dropdown-item {
+    display: block;
+    padding: 10px 14px;
+    border-radius: 8px;
+    color: var(--muted);
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    text-decoration: none;
+}
+
+.nav-links .dropdown-item:hover {
+    background: var(--card);
+    color: var(--text);
+}
+
+/* Иконки в dropdown */
+.dropdown-icon {
+    margin-right: 8px;
+    font-size: 1rem;
+}
+
+/* Мобильное меню */
+@media (max-width: 968px) {
+    .nav-links {
+        position: fixed;
+        inset: 70px 16px auto 16px;
+        background: rgba(7, 12, 26, 0.95);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 12px;
+        flex-direction: column;
+        gap: 6px;
+        transform: translateY(-20px);
+        opacity: 0;
+        pointer-events: none;
+        transition: 0.25s ease;
+    }
+
+    .nav-links.open {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+    }
+
+    .nav-links .nav-dropdown {
+        width: 100%;
+    }
+
+    .nav-links .nav-dropdown>.nav-link {
+        width: 100%;
+        display: block;
+    }
+
+    .nav-links .dropdown-menu {
+        position: static;
+        opacity: 1;
+        visibility: visible;
+        transform: none;
+        min-width: 100%;
+        margin-top: 6px;
+        background: rgba(255, 255, 255, 0.04);
+    }
+}

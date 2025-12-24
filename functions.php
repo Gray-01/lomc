@@ -164,3 +164,131 @@ function lomcsnih_accessibility_styles() {
     }
 }
 add_action('wp_head', 'lomcsnih_accessibility_styles', 16);
+
+// Регистрируем меню
+function lomcsnih_register_menus() {
+    register_nav_menus(
+        array(
+            'primary' => __('Основное меню', 'lomcsnih'),
+            'mobile'  => __('Мобильное меню', 'lomcsnih'),
+        )
+    );
+}
+add_action('init', 'lomcsnih_register_menus');
+
+// Кастомный Walker для меню с поддержкой dropdown
+class Lomcsnih_Nav_Walker extends Walker_Nav_Menu {
+
+    public function start_lvl(&$output, $depth = 0, $args = null) {
+        $indent = str_repeat("\t", $depth);
+
+        // Для первого уровня - dropdown меню
+        if ($depth === 0) {
+            $output .= "\n{$indent}<div class=\"dropdown-menu\">\n";
+        }
+    }
+
+    public function end_lvl(&$output, $depth = 0, $args = null) {
+        $indent = str_repeat("\t", $depth);
+
+        if ($depth === 0) {
+            $output .= "{$indent}</div>\n";
+        }
+    }
+
+    public function start_el(&$output, $item, $depth = 0, $args = null, $id = 0) {
+        $indent = ($depth) ? str_repeat("\t", $depth) : '';
+
+        $classes = empty($item->classes) ? array() : (array) $item->classes;
+        $classes[] = 'menu-item-' . $item->ID;
+
+        // Определяем активный класс
+        $active_class = '';
+        $current_url = $_SERVER['REQUEST_URI'];
+        $is_front_page = is_front_page();
+
+        // URL для ссылки
+        $item_url = $item->url;
+
+        // Если это главная страница
+        if ($item_url == home_url('/') || $item_url == '/') {
+            $item_url = home_url('/');
+            // Активна только на главной
+            if ($is_front_page) {
+                $active_class = 'active';
+            }
+        }
+        // Если это якорная ссылка (#mission, #services и т.д.)
+        elseif (strpos($item_url, '#') === 0) {
+            // Если мы на главной - оставляем как есть
+            if ($is_front_page) {
+                // Для якорных ссылок на главной не делаем активными
+                $active_class = '';
+            } else {
+                // Если не на главной - добавляем путь к главной
+                $item_url = home_url('/') . $item_url;
+            }
+        }
+        // Для страниц /news и /medications
+        elseif (strpos($current_url, $item_url) !== false) {
+            $active_class = 'active';
+        }
+
+        // Если это пункт первого уровня
+        if ($depth === 0) {
+            // Если есть дочерние элементы - добавляем класс nav-dropdown
+            if ($args->walker->has_children) {
+                $output .= $indent . '<div class="nav-dropdown">' . "\n";
+                $output .= $indent . "\t" . '<a class="nav-link ' . $active_class . '" href="' . esc_url($item_url) . '">';
+
+                // Текст ссылки
+                $title = esc_html($item->title);
+                $output .= '<span class="menu-text">' . $title . '</span>';
+                $output .= ' <span class="dropdown-arrow">▾</span>';
+                $output .= '</a>' . "\n";
+            } else {
+                // Обычная ссылка
+                $output .= $indent . '<a class="nav-link ' . $active_class . '" href="' . esc_url($item_url) . '">';
+                $title = esc_html($item->title);
+                $output .= '<span class="menu-text">' . $title . '</span>';
+                $output .= '</a>' . "\n";
+            }
+        }
+        // Если это подпункт (второй уровень)
+        else if ($depth === 1) {
+            // Для подпунктов внутри dropdown
+            $title = esc_html($item->title);
+            $icon = '';
+
+            // Проверяем есть ли эмодзи в начале
+            if (strlen($title) >= 2) {
+                $first_char = mb_substr($title, 0, 1, 'UTF-8');
+                if (preg_match('/[\x{1F300}-\x{1F9FF}]/u', $first_char)) {
+                    $icon = $first_char;
+                    $title = mb_substr($title, 1, null, 'UTF-8');
+                }
+            }
+
+            // URL для подпунктов dropdown
+            $dropdown_url = $item->url;
+            if (strpos($dropdown_url, '#') === 0 && !$is_front_page) {
+                $dropdown_url = home_url('/') . $dropdown_url;
+            }
+
+            $output .= $indent . '<a href="' . esc_url($dropdown_url) . '" class="dropdown-item">';
+
+            if ($icon) {
+                $output .= '<span class="dropdown-icon">' . $icon . '</span>';
+            }
+
+            $output .= '<span class="dropdown-text">' . trim($title) . '</span>';
+            $output .= '</a>' . "\n";
+        }
+    }
+
+    public function end_el(&$output, $item, $depth = 0, $args = null) {
+        if ($depth === 0 && $args->walker->has_children) {
+            $output .= "</div>\n";
+        }
+    }
+}

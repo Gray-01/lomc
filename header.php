@@ -62,51 +62,53 @@
                 </div>
             </div>
 
-            <nav class="nav-links" id="nav-links">
-                <?php
-                // Получаем текущий URL для проверки активного пункта меню
-                $current_url = $_SERVER['REQUEST_URI'];
-                $is_front_page = is_front_page();
-                ?>
+        <nav class="nav-links" id="nav-links">
+    <?php
+    // Выводим WordPress меню или запасной вариант
+    if (has_nav_menu('primary')) {
+        wp_nav_menu(array(
+            'theme_location' => 'primary',
+            'menu_class'     => '',
+            'container'      => false,
+            'fallback_cb'    => false,
+            'depth'          => 2, // Только 2 уровня: основной и dropdown
+            'walker'         => new Lomcsnih_Nav_Walker(),
+        ));
+    } else {
+        // Запасной вариант если меню не создано
+        $current_url = $_SERVER['REQUEST_URI'];
+        $is_front_page = is_front_page();
+        ?>
+        <a href="<?php echo esc_url(home_url('/')); ?>" class="nav-link <?php echo $is_front_page ? 'active' : ''; ?>">Головна</a>
 
-                <a href="<?php echo esc_url(home_url('/')); ?>"
-                   class="nav-link <?php echo $is_front_page ? 'active' : ''; ?>">
-                   Головна
-                </a>
+        <?php if ($is_front_page): ?>
+            <a href="#mission" class="nav-link">Місія</a>
+            <a href="#services" class="nav-link">Послуги</a>
+            <a href="#structure" class="nav-link">Структура</a>
+            <a href="#team" class="nav-link">Адміністрація</a>
+        <?php else: ?>
+            <a href="<?php echo esc_url(home_url('/#mission')); ?>" class="nav-link">Місія</a>
+            <a href="<?php echo esc_url(home_url('/#services')); ?>" class="nav-link">Послуги</a>
+            <a href="<?php echo esc_url(home_url('/#structure')); ?>" class="nav-link">Структура</a>
+            <a href="<?php echo esc_url(home_url('/#team')); ?>" class="nav-link">Адміністрація</a>
+        <?php endif; ?>
 
-                <?php if ($is_front_page): ?>
-                    <a href="#mission" class="nav-link">Місія</a>
-                    <a href="#services" class="nav-link">Послуги</a>
-                    <a href="#structure" class="nav-link">Структура</a>
-                    <a href="#team" class="nav-link">Адміністрація</a>
-                <?php else: ?>
-                    <a href="<?php echo esc_url(home_url('/#mission')); ?>" class="nav-link">Місія</a>
-                    <a href="<?php echo esc_url(home_url('/#services')); ?>" class="nav-link">Послуги</a>
-                    <a href="<?php echo esc_url(home_url('/#structure')); ?>" class="nav-link">Структура</a>
-                    <a href="<?php echo esc_url(home_url('/#team')); ?>" class="nav-link">Адміністрація</a>
-                <?php endif; ?>
+        <a href="<?php echo esc_url(home_url('/news')); ?>" class="nav-link <?php echo strpos($current_url, '/news') !== false ? 'active' : ''; ?>">Новини</a>
+        <a href="<?php echo esc_url(home_url('/medications')); ?>" class="nav-link <?php echo strpos($current_url, '/medications') !== false ? 'active' : ''; ?>">Залишки</a>
 
-                <a href="<?php echo esc_url(home_url('/news')); ?>"
-                   class="nav-link <?php echo strpos($current_url, '/news') !== false ? 'active' : ''; ?>">
-                   Новини
-                </a>
+        <div class="nav-dropdown">
+            <a href="<?php echo $is_front_page ? '#contacts' : esc_url(home_url('/#contacts')); ?>" class="nav-link">Контакти <span class="dropdown-arrow">▾</span></a>
+            <div class="dropdown-menu">
+                <a href="<?php echo $is_front_page ? '#contacts' : esc_url(home_url('/#contacts')); ?>" class="dropdown-item">📍 Адреси та телефони</a>
+                <a href="<?php echo $is_front_page ? '#contacts' : esc_url(home_url('/#contacts')); ?>" class="dropdown-item">🛡️ Антикорупційний розділ</a>
+            </div>
+        </div>
+        <?php
+    }
+    ?>
+</nav>
 
-                <a href="<?php echo esc_url(home_url('/medications')); ?>"
-                   class="nav-link <?php echo strpos($current_url, '/medications') !== false ? 'active' : ''; ?>">
-                   Залишки
-                </a>
 
-                <div class="nav-dropdown">
-                    <a href="<?php echo $is_front_page ? '#contacts' : esc_url(home_url('/#contacts')); ?>"
-                       class="nav-link">Контакти <span class="dropdown-arrow">▾</span></a>
-                    <div class="dropdown-menu">
-                        <a href="<?php echo $is_front_page ? '#contacts' : esc_url(home_url('/#contacts')); ?>"
-                           class="dropdown-item">📍 Адреси та телефони</a>
-                        <a href="<?php echo $is_front_page ? '#contacts' : esc_url(home_url('/#contacts')); ?>"
-                           class="dropdown-item">🛡️ Антикорупційний розділ</a>
-                    </div>
-                </div>
-            </nav>
             <div class="nav-cta">
                 <a class="phone" href="tel:+380506833065">(050) 683-30-65</a>
                 <button class="burger" id="burger" aria-label="Відкрити меню">
