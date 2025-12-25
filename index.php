@@ -6,9 +6,6 @@
     <div class="container hero-grid">
         <div class="hero-text">
             <?php
-            // ===================================================
-            // УНИВЕРСАЛЬНЫЙ И НАДЕЖНЫЙ СПОСОБ ДЛЯ ГЛАВНОЙ СТРАНИЦЫ
-            // ===================================================
 
             // 1. ОПРЕДЕЛЯЕМ ID СТРАНИЦЫ HOME
             $home_page_id = false;
@@ -178,13 +175,56 @@
         </div> <!-- Закрываем .hero-text -->
 
         <!-- ИЗОБРАЖЕНИЕ (отдельно от .hero-text) -->
-        <div class="hero-image reveal">
-            <div class="image-wrapper">
-                <img src="<?php echo get_template_directory_uri(); ?>/assets/images/main.jpg" alt="Фото медичного центру">
-                <div class="image-decoration"></div>
-            </div>
-        </div>
+
+        <!-- ИЗОБРАЖЕНИЕ -->
+<div class="hero-image reveal">
+    <div class="image-wrapper">
+        <?php
+        // Дефолтные значения
+        $hero_image_url = get_template_directory_uri() . '/assets/images/main.jpg';
+        $hero_image_alt = 'Фото медичного центру';
+
+        // Получаем данные из ACF
+        if (function_exists('get_field') && $home_page_id) {
+            $acf_hero_image = get_field('hero_image', $home_page_id);
+            $acf_hero_image_alt = get_field('hero_image_alt', $home_page_id);
+
+            // Обрабатываем изображение (массив от ACF)
+            if (!empty($acf_hero_image) && is_array($acf_hero_image)) {
+                // Берем URL из массива
+                $hero_image_url = $acf_hero_image['url'];
+
+                // Можно также использовать определенный размер:
+                // if (!empty($acf_hero_image['sizes']['medium'])) {
+                //     $hero_image_url = $acf_hero_image['sizes']['medium'];
+                // }
+
+                // Берем alt из массива, если есть
+                if (!empty($acf_hero_image['alt'])) {
+                    $hero_image_alt = $acf_hero_image['alt'];
+                }
+            }
+
+            // Альтернативный текст из отдельного поля (если заполнено)
+            if (!empty($acf_hero_image_alt)) {
+                $hero_image_alt = $acf_hero_image_alt;
+            }
+
+            // Отладка (можно включить для проверки)
+            // echo '<!-- ACF изображение: ';
+            // print_r($acf_hero_image);
+            // echo ' -->';
+        }
+        ?>
+
+        <img src="<?php echo esc_url($hero_image_url); ?>"
+             alt="<?php echo esc_attr($hero_image_alt); ?>">
+        <div class="image-decoration"></div>
     </div>
+</div>
+
+    </div>
+
 </section>
 
         <section class="section mission" id="mission">
