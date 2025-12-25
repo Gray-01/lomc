@@ -464,13 +464,96 @@ if( have_rows('services_cards', $section_id) ): ?>
             </div>
         </section>
 
-        <section class="section structure" id="structure">
+            <section class="section structure" id="structure">
             <div class="container">
-                <div class="section-head">
-                    <p class="eyebrow">Напрями та структура</p>
-                    <h2>Відділення та кабінети центру</h2>
-                    <p class="muted">Повний перелік підрозділів, що працюють у складі центру</p>
-                </div>
+
+            <?php
+$structure_section = get_posts(array(
+    'post_type'      => 'site_sections',
+    'title'          => 'Секция: Структура',
+    'post_status'    => 'publish',
+    'numberposts'    => 1,
+));
+
+if ($structure_section) :
+
+    $section_id = $structure_section[0]->ID;
+
+    $eyebrow     = get_field('structure_eyebrow', $section_id);
+    $heading     = get_field('structure_main_heading', $section_id);
+    $description = get_field('structure_description', $section_id);
+
+    $eyebrow_color     = get_field('structure_eyebrow_color', $section_id) ?: '#a8b3c7';
+    $heading_color     = get_field('structure_heading_color', $section_id) ?: '#e7ecf5';
+    $description_color = get_field('structure_description_color', $section_id) ?: '#a8b3c7';
+?>
+
+<style>
+    #structure .section-head .eyebrow { color: <?php echo esc_attr($eyebrow_color); ?>; }
+    #structure .section-head h2 { color: <?php echo esc_attr($heading_color); ?>; }
+    #structure .section-head .muted { color: <?php echo esc_attr($description_color); ?>; }
+
+    /* Сброс стилей для параграфов внутри */
+    #structure .section-head .eyebrow p,
+    #structure .section-head .muted p {
+        margin: 0 !important;
+        padding: 0 !important;
+        display: inline !important;
+        color: inherit !important;
+        font-size: inherit !important;
+        font-weight: inherit !important;
+        line-height: inherit !important;
+    }
+</style>
+
+<div class="section-head">
+
+    <?php if ($eyebrow): ?>
+        <div class="eyebrow">
+            <?php
+            // Убираем теги <p> и оставляем только содержимое
+            $clean_eyebrow = strip_tags($eyebrow, '<strong><em><a><span><br>');
+            $clean_eyebrow = str_replace(array('<p>', '</p>'), '', $clean_eyebrow);
+            echo $clean_eyebrow;
+            ?>
+        </div>
+    <?php endif; ?>
+
+    <?php if ($heading): ?>
+        <h2>
+            <?php
+            // Для заголовка тоже убираем теги <p>
+            $clean_heading = strip_tags($heading, '<strong><em><a><span><br>');
+            $clean_heading = str_replace(array('<p>', '</p>'), '', $clean_heading);
+            echo $clean_heading;
+            ?>
+        </h2>
+    <?php endif; ?>
+
+    <?php if ($description): ?>
+        <div class="muted">
+            <?php
+            // Для описания убираем теги <p>
+            $clean_description = strip_tags($description, '<strong><em><a><span><br><ul><ol><li>');
+            $clean_description = str_replace(array('<p>', '</p>'), '', $clean_description);
+            echo $clean_description;
+            ?>
+        </div>
+    <?php endif; ?>
+
+</div>
+
+<?php else: ?>
+
+<div class="section-head">
+    <div class="eyebrow">Напрями та структура</div>
+    <h2>Відділення та кабінети центру</h2>
+    <div class="muted">Повний перелік підрозділів, що працюють у складі центру</div>
+</div>
+
+<?php endif; ?>
+
+
                 <div class="structure-grid-wp">
                     <div class="structure-card reveal">
                         <div class="structure-card-icon">🏥</div>
@@ -540,6 +623,7 @@ if( have_rows('services_cards', $section_id) ): ?>
                 </div>
             </div>
         </section>
+
 
         <section class="section team" id="team">
             <div class="container">
