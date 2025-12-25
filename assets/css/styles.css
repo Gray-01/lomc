@@ -1176,3 +1176,38 @@ h2 {
     display: block;
     width: 100%;
 }
+
+/* Сброс стилей WordPress в карточках секции Миссия */
+#mission .card-grid .card .card-title p,
+#mission .card-grid .card .card-description p {
+    all: initial !important;
+    display: inline !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    line-height: inherit !important;
+    font-size: inherit !important;
+    font-weight: inherit !important;
+    color: inherit !important;
+}
+
+/* Восстанавливаем оригинальные стили для заголовков карточек */
+#mission .card-grid .card .card-title,
+#mission .card-grid .card .card-title p,
+#mission .card-grid .card .card-title h3 {
+    font-size: 1.25rem !important;
+    font-weight: 600 !important;
+    line-height: 1.4 !important;
+    margin-bottom: 0.75rem !important;
+    margin-top: 0 !important;
+    padding: 0 !important;
+}
+
+/* Восстанавливаем оригинальные стили для описания карточек */
+#mission .card-grid .card .card-description,
+#mission .card-grid .card .card-description p {
+    font-size: 0.9375rem !important;
+    line-height: 1.6 !important;
+    margin-bottom: 1rem !important;
+    padding: 0 !important;
+    color: rgba(255, 255, 255, 0.7) !important;
+}
