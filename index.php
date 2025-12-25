@@ -355,16 +355,55 @@
                         </article>
                     </div>
                 <?php endif; ?>
-
             </div>
         </section>
 
+
         <section class="section services-v2" id="services">
             <div class="container">
-                <div class="section-header-v2">
-                    <span class="section-label">Наші послуги</span>
-                    <h2 class="section-title-v2">Що ми пропонуємо</h2>
-                </div>
+
+             <?php
+// Находим запись секции "Послуги"
+$services_section = get_posts(array(
+    'post_type' => 'site_sections',
+    'title' => 'Секция: Послуги',
+    'post_status' => 'publish',
+    'numberposts' => 1
+));
+
+if($services_section) :
+    $section_id = $services_section[0]->ID;
+
+    // Получаем значения
+    $section_label = get_field('services_section_label', $section_id);
+    $main_heading = get_field('services_main_heading', $section_id);
+    $label_color = get_field('services_label_color', $section_id) ?: '#59f0ff';
+    $heading_color = get_field('services_heading_color', $section_id) ?: '#e7ecf5';
+?>
+    <!-- Инлайн стили для цветов -->
+    <style>
+        #services .section-header-v2 .section-label,
+        #services .section-header-v2 .section-label * {
+            color: <?php echo esc_attr($label_color); ?> !important;
+        }
+
+        #services .section-header-v2 .section-title-v2,
+        #services .section-header-v2 .section-title-v2 * {
+            color: <?php echo esc_attr($heading_color); ?> !important;
+        }
+    </style>
+
+    <div class="section-header-v2">
+        <?php if($section_label): ?>
+            <span class="section-label"><?php echo $section_label; ?></span>
+        <?php endif; ?>
+
+        <?php if($main_heading): ?>
+            <h2 class="section-title-v2"><?php echo $main_heading; ?></h2>
+        <?php endif; ?>
+    </div>
+<?php endif; ?>
+
                 <div class="services-v2__grid">
                     <div class="service-card-v2 reveal">
                         <div class="service-card-v2__icon">🫁</div>
