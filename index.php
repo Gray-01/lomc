@@ -2,185 +2,190 @@
 
     <main>
 
-        <section class="hero section" id="home">
-            <div class="container hero-grid">
-                <div class="hero-text">
-                    <?php
-                    // ===================================================
-                    // УНИВЕРСАЛЬНЫЙ И НАДЕЖНЫЙ СПОСОБ ДЛЯ ГЛАВНОЙ СТРАНИЦЫ
-                    // ===================================================
+    <section class="hero section" id="home">
+    <div class="container hero-grid">
+        <div class="hero-text">
+            <?php
+            // ===================================================
+            // УНИВЕРСАЛЬНЫЙ И НАДЕЖНЫЙ СПОСОБ ДЛЯ ГЛАВНОЙ СТРАНИЦЫ
+            // ===================================================
 
-                    // 1. ОПРЕДЕЛЯЕМ ID СТРАНИЦЫ HOME ТРЕМЯ СПОСОБАМИ
-                    $home_page_id = false;
+            // 1. ОПРЕДЕЛЯЕМ ID СТРАНИЦЫ HOME
+            $home_page_id = false;
 
-                    // Способ 1: Если страница назначена как "Главная страница"
-                    if (get_option('page_on_front')) {
-                        $home_page_id = get_option('page_on_front');
-                    }
-                    // Способ 2: Если страница Home используется как "Страница записей"
-                    elseif (get_option('page_for_posts')) {
-                        $home_page_id = get_option('page_for_posts');
-                    }
-                    // Способ 3: Ищем страницу по slug 'home'
-                    else {
-                        $home_page = get_page_by_path('home');
-                        if ($home_page) {
-                            $home_page_id = $home_page->ID;
-                        }
-                    }
+            if (get_option('page_on_front')) {
+                $home_page_id = get_option('page_on_front');
+            }
+            elseif (get_option('page_for_posts')) {
+                $home_page_id = get_option('page_for_posts');
+            }
+            else {
+                $home_page = get_page_by_path('home');
+                if ($home_page) {
+                    $home_page_id = $home_page->ID;
+                }
+            }
 
-                    // 2. УСТАНАВЛИВАЕМ ПРАВИЛЬНЫЕ ДЕФОЛТНЫЕ ЗНАЧЕНИЯ (как в вашем CSS)
-                    // ПРАВИЛЬНЫЕ значения:
-                    $pill_text = 'КНП Луганської обласної ради';
-                    $pill_bg_color = '#ffffff1f';           // background-color: #ffffff1f
-                    $pill_text_color = '#a8b3c7';          // color: #a8b3c7
-                    $pill_border_color = '#ffffff1f';      // border-color: #ffffff1f
+            // 2. ДЕФОЛТНЫЕ ЗНАЧЕНИЯ ДЛЯ ПИЛЮЛИ
+            $pill_text = 'КНП Луганської обласної ради';
+            $pill_bg_color = '#ffffff1f';
+            $pill_text_color = '#a8b3c7';
+            $pill_border_color = '#ffffff1f';
 
-                    // 3. ПОЛУЧАЕМ ДАННЫЕ ИЗ ACF (если ACF установлен и ID найден)
-                    if (function_exists('get_field') && $home_page_id) {
-                        // Безопасно получаем значения с проверкой на пустоту
-                        $acf_pill_text = get_field('hero_pill_text', $home_page_id);
-                        $acf_pill_bg_color = get_field('hero_pill_bg_color', $home_page_id);
-                        $acf_pill_text_color = get_field('hero_pill_text_color', $home_page_id);
-                        $acf_pill_border_color = get_field('hero_pill_border_color', $home_page_id);
+            // 3. ДЕФОЛТНЫЕ ЗНАЧЕНИЯ ДЛЯ ЗАГОЛОВКА И ТЕКСТА
+            $title_line1 = 'Луганський обласний медичний центр';
+            $title_line2 = 'соціально небезпечних інфекційних хвороб';
+            $title_color1 = '#e7ecf5';
+            $gradient_start = '#59f0ff';
+            $gradient_end = '#7c6bff';
+            $description = 'Метою діяльності Підприємства є організація та надання третинної (високоспеціалізованої) медичної допомоги з лікування та профілактики захворюваності на туберкульоз, ВІЛ-інфекції/СНІД та інші соціально небезпечні інфекційні хвороби в амбулаторних та стаціонарних умовах, у плановому та екстреному випадках, проведення діагностики, надання консультацій, психосоціальна підтримка та медична реабілітація пацієнтів (хворих) незалежно від місця їх проживання та адреси реєстрації.';
+            $description_color = '#a8b3c7';
 
-                        // Используем ACF значения только если они не пустые
-                        if ($acf_pill_text !== false && $acf_pill_text !== null && $acf_pill_text !== '') {
-                            $pill_text = $acf_pill_text;
-                        }
-                        if ($acf_pill_bg_color !== false && $acf_pill_bg_color !== null && $acf_pill_bg_color !== '') {
-                            $pill_bg_color = $acf_pill_bg_color;
-                        }
-                        if ($acf_pill_text_color !== false && $acf_pill_text_color !== null && $acf_pill_text_color !== '') {
-                            $pill_text_color = $acf_pill_text_color;
-                        }
-                        if ($acf_pill_border_color !== false && $acf_pill_border_color !== null && $acf_pill_border_color !== '') {
-                            $pill_border_color = $acf_pill_border_color;
-                        }
-                    }
+            // 4. ДЕФОЛТНЫЕ ЗНАЧЕНИЯ ДЛЯ КНОПОК
+            $btn1_text = 'Зв\'язатися';
+            $btn1_text_color = '#070c1a';
+            $btn1_gradient_start = '#59f0ff';
+            $btn1_gradient_end = '#7c6bff';
+            $btn1_link = '#contacts';
 
-                    ?>
+            $btn2_text = 'Дізнатись більше';
+            $btn2_text_color = '#e7ecf5';
+            $btn2_bg_color = 'rgba(255, 255, 255, 0.06)';
+            $btn2_border_color = 'rgba(255, 255, 255, 0.12)';
+            $btn2_link = '#mission';
 
-                    <!-- ПИЛЮЛЯ с inline стилями -->
-                    <div class="pill" style="
-                        background: <?php echo esc_attr($pill_bg_color); ?>;
-                        border-color: <?php echo esc_attr($pill_border_color); ?>;
-                        color: <?php echo esc_attr($pill_text_color); ?>;">
-                        <?php echo esc_html($pill_text); ?>
-                    </div>
+            // 5. ПОЛУЧАЕМ ДАННЫЕ ИЗ ACF
+            if (function_exists('get_field') && $home_page_id) {
+                // ПИЛЮЛЯ
+                $acf_pill_text = get_field('hero_pill_text', $home_page_id);
+                $acf_pill_bg_color = get_field('hero_pill_bg_color', $home_page_id);
+                $acf_pill_text_color = get_field('hero_pill_text_color', $home_page_id);
+                $acf_pill_border_color = get_field('hero_pill_border_color', $home_page_id);
 
+                if (!empty($acf_pill_text)) $pill_text = $acf_pill_text;
+                if (!empty($acf_pill_bg_color)) $pill_bg_color = $acf_pill_bg_color;
+                if (!empty($acf_pill_text_color)) $pill_text_color = $acf_pill_text_color;
+                if (!empty($acf_pill_border_color)) $pill_border_color = $acf_pill_border_color;
 
-                <?php
+                // ЗАГОЛОВОК
+                $acf_title_line1 = get_field('hero_title_line1', $home_page_id);
+                $acf_title_line2 = get_field('hero_title_line2', $home_page_id);
+                $acf_title_color1 = get_field('hero_title_color1', $home_page_id);
+                $acf_gradient_start = get_field('hero_gradient_start', $home_page_id);
+                $acf_gradient_end = get_field('hero_gradient_end', $home_page_id);
 
-// ПОЛУЧАЕМ ДАННЫЕ ДЛЯ ЗАГОЛОВКА И ТЕКСТА
+                if ($acf_title_line1 !== false && $acf_title_line1 !== null && trim($acf_title_line1) !== '') {
+                    $title_line1 = $acf_title_line1;
+                }
+                if ($acf_title_line2 !== false && $acf_title_line2 !== null && trim($acf_title_line2) !== '') {
+                    $title_line2 = $acf_title_line2;
+                }
+                if (!empty($acf_title_color1)) $title_color1 = $acf_title_color1;
+                if (!empty($acf_gradient_start)) $gradient_start = $acf_gradient_start;
+                if (!empty($acf_gradient_end)) $gradient_end = $acf_gradient_end;
 
-$home_page_id = false;
+                // ТЕКСТ
+                $acf_description = get_field('hero_description', $home_page_id);
+                $acf_description_color = get_field('hero_description_color', $home_page_id);
 
-if (get_option('page_on_front')) {
-    $home_page_id = get_option('page_on_front');
-}
-elseif (get_option('page_for_posts')) {
-    $home_page_id = get_option('page_for_posts');
-}
-else {
-    $home_page = get_page_by_path('home');
-    if ($home_page) {
-        $home_page_id = $home_page->ID;
-    }
-}
+                if ($acf_description !== false && $acf_description !== null && trim($acf_description) !== '') {
+                    $description = $acf_description;
+                }
+                if (!empty($acf_description_color)) $description_color = $acf_description_color;
 
-// 2. Дефолтные значения для заголовка и текста
-$title_line1 = 'Луганський обласний медичний центр';
-$title_line2 = 'соціально небезпечних інфекційних хвороб';
-$title_color1 = '#e7ecf5';
-$gradient_start = '#59f0ff';
-$gradient_end = '#7c6bff';
-$description = 'Метою діяльності Підприємства є організація та надання третинної (високоспеціалізованої) медичної допомоги з лікування та профілактики захворюваності на туберкульоз, ВІЛ-інфекції/СНІД та інші соціально небезпечні інфекційні хвороби в амбулаторних та стаціонарних умовах, у плановому та екстреному випадках, проведення діагностики, надання консультацій, психосоціальна підтримка та медична реабілітація пацієнтів (хворих) незалежно від місця їх проживання та адреси реєстрації.';
-$description_color = '#a8b3c7';
+                // КНОПКИ
+                $acf_btn1_text = get_field('hero_btn1_text', $home_page_id);
+                $acf_btn1_text_color = get_field('hero_btn1_text_color', $home_page_id);
+                $acf_btn1_gradient_start = get_field('hero_btn1_gradient_start', $home_page_id);
+                $acf_btn1_gradient_end = get_field('hero_btn1_gradient_end', $home_page_id);
+                $acf_btn1_link = get_field('hero_btn1_link', $home_page_id);
 
-// 3. Получаем данные из ACF (если ACF установлен и ID найден)
-if (function_exists('get_field') && $home_page_id) {
-    // Заголовок (WYSIWYG поля)
-    $acf_title_line1 = get_field('hero_title_line1', $home_page_id);
-    $acf_title_line2 = get_field('hero_title_line2', $home_page_id);
-    $acf_title_color1 = get_field('hero_title_color1', $home_page_id);
-    $acf_gradient_start = get_field('hero_gradient_start', $home_page_id);
-    $acf_gradient_end = get_field('hero_gradient_end', $home_page_id);
+                $acf_btn2_text = get_field('hero_btn2_text', $home_page_id);
+                $acf_btn2_text_color = get_field('hero_btn2_text_color', $home_page_id);
+                $acf_btn2_bg_color = get_field('hero_btn2_bg_color', $home_page_id);
+                $acf_btn2_border_color = get_field('hero_btn2_border_color', $home_page_id);
+                $acf_btn2_link = get_field('hero_btn2_link', $home_page_id);
 
-    // Для WYSIWGY полей проверяем наличие контента
-    if ($acf_title_line1 !== false && $acf_title_line1 !== null && trim($acf_title_line1) !== '') {
-        $title_line1 = $acf_title_line1;
-    }
-    if ($acf_title_line2 !== false && $acf_title_line2 !== null && trim($acf_title_line2) !== '') {
-        $title_line2 = $acf_title_line2;
-    }
-    if (!empty($acf_title_color1)) $title_color1 = $acf_title_color1;
-    if (!empty($acf_gradient_start)) $gradient_start = $acf_gradient_start;
-    if (!empty($acf_gradient_end)) $gradient_end = $acf_gradient_end;
+                if (!empty($acf_btn1_text)) $btn1_text = $acf_btn1_text;
+                if (!empty($acf_btn1_text_color)) $btn1_text_color = $acf_btn1_text_color;
+                if (!empty($acf_btn1_gradient_start)) $btn1_gradient_start = $acf_btn1_gradient_start;
+                if (!empty($acf_btn1_gradient_end)) $btn1_gradient_end = $acf_btn1_gradient_end;
+                if (!empty($acf_btn1_link)) $btn1_link = $acf_btn1_link;
 
-    // Текст (WYSIWYG)
-    $acf_description = get_field('hero_description', $home_page_id);
-    $acf_description_color = get_field('hero_description_color', $home_page_id);
+                if (!empty($acf_btn2_text)) $btn2_text = $acf_btn2_text;
+                if (!empty($acf_btn2_text_color)) $btn2_text_color = $acf_btn2_text_color;
+                if (!empty($acf_btn2_bg_color)) $btn2_bg_color = $acf_btn2_bg_color;
+                if (!empty($acf_btn2_border_color)) $btn2_border_color = $acf_btn2_border_color;
+                if (!empty($acf_btn2_link)) $btn2_link = $acf_btn2_link;
+            }
 
-    if ($acf_description !== false && $acf_description !== null && trim($acf_description) !== '') {
-        $description = $acf_description;
-    }
-    if (!empty($acf_description_color)) $description_color = $acf_description_color;
-}
+            // Безопасная обработка HTML для заголовков
+            $allowed_title_tags = array(
+                'a' => array('href', 'title', 'target', 'class', 'id'),
+                'strong' => array(),
+                'em' => array(),
+                'b' => array(),
+                'i' => array(),
+                'span' => array('class', 'style'),
+                'br' => array()
+            );
+            ?>
 
-// 4. Безопасная обработка HTML для заголовков (разрешаем безопасные теги)
-$allowed_title_tags = array(
-    'a' => array(
-        'href' => array(),
-        'title' => array(),
-        'target' => array(),
-        'class' => array(),
-        'id' => array()
-    ),
-    'strong' => array(),
-    'em' => array(),
-    'b' => array(),
-    'i' => array(),
-    'span' => array(
-        'class' => array(),
-        'style' => array()
-    ),
-    'br' => array()
-);
-?>
-
-<!-- ЗАГОЛОВОК С ГРАДИЕНТОМ (WYSIWYG редактор) -->
-<h1 style="color: <?php echo esc_attr($title_color1); ?>;">
-    <?php echo wp_kses($title_line1, $allowed_title_tags); ?><br>
-    <span class="gradient-text" style="background: linear-gradient(120deg, <?php echo esc_attr($gradient_start); ?>, <?php echo esc_attr($gradient_end); ?>);
-                                       -webkit-background-clip: text;
-                                       background-clip: text;
-                                       color: transparent;">
-        <?php echo wp_kses($title_line2, $allowed_title_tags); ?>
-    </span>
-</h1>
-
-<!-- ТЕКСТ ОПИСАНИЯ (WYSIWYG редактор) -->
-<div class="lead" style="color: <?php echo esc_attr($description_color); ?>;">
-    <?php echo apply_filters('the_content', $description); ?>
-</div>
-
-                    <!-- КНОПКИ (пока статичные, потом добавим ACF) -->
-                    <div class="hero-actions">
-                        <a href="#contacts" class="btn primary">Зв'язатися</a>
-                        <a href="#mission" class="btn ghost">Дізнатись більше</a>
-                    </div>
-                </div>
-
-                <!-- ИЗОБРАЖЕНИЕ (пока статичное, потом добавим ACF) -->
-                <div class="hero-image reveal">
-                    <div class="image-wrapper">
-                        <img src="<?php echo get_template_directory_uri(); ?>/assets/images/main.jpg" alt="Фото медичного центру">
-                        <div class="image-decoration"></div>
-                    </div>
-                </div>
+            <!-- ПИЛЮЛЯ -->
+            <div class="pill" style="
+                background: <?php echo esc_attr($pill_bg_color); ?>;
+                border-color: <?php echo esc_attr($pill_border_color); ?>;
+                color: <?php echo esc_attr($pill_text_color); ?>;">
+                <?php echo esc_html($pill_text); ?>
             </div>
-        </section>
+
+            <!-- ЗАГОЛОВОК С ГРАДИЕНТОМ -->
+            <h1 style="color: <?php echo esc_attr($title_color1); ?>;">
+                <?php echo wp_kses($title_line1, $allowed_title_tags); ?><br>
+                <span class="gradient-text" style="background: linear-gradient(120deg, <?php echo esc_attr($gradient_start); ?>, <?php echo esc_attr($gradient_end); ?>);
+                                                   -webkit-background-clip: text;
+                                                   background-clip: text;
+                                                   color: transparent;">
+                    <?php echo wp_kses($title_line2, $allowed_title_tags); ?>
+                </span>
+            </h1>
+
+            <!-- ТЕКСТ ОПИСАНИЯ -->
+            <div class="lead" style="color: <?php echo esc_attr($description_color); ?>;">
+                <?php echo apply_filters('the_content', $description); ?>
+            </div>
+
+            <!-- КНОПКИ -->
+            <div class="hero-actions">
+                <!-- Первая кнопка (primary) -->
+                <a href="<?php echo esc_attr($btn1_link); ?>"
+                   class="btn primary"
+                   style="background: linear-gradient(120deg, <?php echo esc_attr($btn1_gradient_start); ?>, <?php echo esc_attr($btn1_gradient_end); ?>);
+                          color: <?php echo esc_attr($btn1_text_color); ?>;
+                          box-shadow: 0 10px 40px rgba(89, 240, 255, 0.2);">
+                    <?php echo esc_html($btn1_text); ?>
+                </a>
+
+                <!-- Вторая кнопка (ghost) -->
+                <a href="<?php echo esc_attr($btn2_link); ?>"
+                   class="btn ghost"
+                   style="color: <?php echo esc_attr($btn2_text_color); ?>;
+                          background: <?php echo esc_attr($btn2_bg_color); ?>;
+                          border-color: <?php echo esc_attr($btn2_border_color); ?>;">
+                    <?php echo esc_html($btn2_text); ?>
+                </a>
+            </div>
+        </div> <!-- Закрываем .hero-text -->
+
+        <!-- ИЗОБРАЖЕНИЕ (отдельно от .hero-text) -->
+        <div class="hero-image reveal">
+            <div class="image-wrapper">
+                <img src="<?php echo get_template_directory_uri(); ?>/assets/images/main.jpg" alt="Фото медичного центру">
+                <div class="image-decoration"></div>
+            </div>
+        </div>
+    </div>
+</section>
 
         <section class="section mission" id="mission">
             <div class="container">
