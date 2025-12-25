@@ -461,3 +461,43 @@ function create_site_sections_cpt() {
     register_post_type('site_sections', $args);
 }
 add_action('init', 'create_site_sections_cpt');
+
+
+// Функция для конвертации HEX в RGBA
+function hex2rgba($color, $opacity = false) {
+    $default = 'rgb(0,0,0)';
+
+    // Возвращаем дефолтный цвет, если цвет пустой
+    if(empty($color)) {
+        return $default;
+    }
+
+    // Убираем символ #
+    if ($color[0] == '#' ) {
+        $color = substr( $color, 1 );
+    }
+
+    // Проверяем длину HEX кода
+    if (strlen($color) == 6) {
+        $hex = array( $color[0] . $color[1], $color[2] . $color[3], $color[4] . $color[5] );
+    } elseif ( strlen( $color ) == 3 ) {
+        $hex = array( $color[0] . $color[0], $color[1] . $color[1], $color[2] . $color[2] );
+    } else {
+        return $default;
+    }
+
+    // Конвертируем HEX в RGB
+    $rgb =  array_map('hexdec', $hex);
+
+    // Если указана прозрачность
+    if($opacity) {
+        if(abs($opacity) > 1) {
+            $opacity = 1.0;
+        }
+        $output = 'rgba('.implode(",",$rgb).','.$opacity.')';
+    } else {
+        $output = 'rgb('.implode(",",$rgb).')';
+    }
+
+    return $output;
+}

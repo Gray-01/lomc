@@ -404,75 +404,63 @@ if($services_section) :
     </div>
 <?php endif; ?>
 
-                <div class="services-v2__grid">
-                    <div class="service-card-v2 reveal">
-                        <div class="service-card-v2__icon">🫁</div>
-                        <h3 class="service-card-v2__title">Діагностика та лікування туберкульозу</h3>
-                        <p class="service-card-v2__desc">Комплексна діагностика, виявлення та лікування всіх форм
-                            туберкульозу з використанням сучасних методів</p>
-                        <ul class="service-card-v2__list">
-                            <li>Діагностика та виявлення</li>
-                            <li>Рентген-діагностика</li>
-                            <li>Лабораторні дослідження</li>
-                            <li>Контрольоване лікування</li>
-                        </ul>
-                    </div>
-                    <div class="service-card-v2 reveal">
-                        <div class="service-card-v2__icon">🧬</div>
-                        <h3 class="service-card-v2__title">Діагностика та лікування вірусних гепатитів В та С</h3>
-                        <p class="service-card-v2__desc">Діагностика та терапія вірусних гепатитів В і С з застосуванням
-                            сучасних протоколів лікування</p>
-                        <ul class="service-card-v2__list">
-                            <li>Діагностика та виявлення</li>
-                            <li>Швидке тестування</li>
-                            <li>Молекулярна діагностика</li>
-                            <li>Противірусна терапія</li>
-                        </ul>
-                    </div>
-                    <div class="service-card-v2 reveal">
-                        <div class="service-card-v2__icon">💉</div>
-                        <h3 class="service-card-v2__title">Діагностика та лікування ВІЛ-інфекціі/СНІДУ</h3>
-                        <p class="service-card-v2__desc">Надання АРТ, моніторинг лікування, забезпечення препаратами та
-                            технічна підтримка</p>
-                        <ul class="service-card-v2__list">
-                            <li>Діагностика та виявлення</li>
-                            <li>Тестування на ВІЛ</li>
-                            <li>Призначення АРТ</li>
-                            <li>Моніторинг терапії</li>
-                        </ul>
-                    </div>
-                    <div class="service-card-v2 reveal">
-                        <div class="service-card-v2__icon">🔬</div>
-                        <h3 class="service-card-v2__title">Лабораторна діагностика</h3>
-                        <p class="service-card-v2__desc">Повний спектр клініко-діагностичних та бактеріологічних
-                            досліджень</p>
-                        <ul class="service-card-v2__list">
-                            <li>Клінічні аналізи</li>
-                            <li>Бактеріологія</li>
-                            <li>Імунологія</li>
-                        </ul>
-                    </div>
-                    <div class="service-card-v2 reveal">
-                        <div class="service-card-v2__icon">🩻</div>
-                        <h3 class="service-card-v2__title">Рентген-діагностика</h3>
-                        <p class="service-card-v2__desc">Сучасне рентгенологічне обладнання для точної діагностики
-                            захворювань</p>
-                        <ul class="service-card-v2__list">
-                            <li>Рентгенографія</li>
-                        </ul>
-                    </div>
-                    <div class="service-card-v2 reveal">
-                        <div class="service-card-v2__icon">👶</div>
-                        <h3 class="service-card-v2__title">Педіатрична допомога</h3>
-                        <p class="service-card-v2__desc">Спеціалізована допомога дітям, хворим на соціально небезпечні
-                            інфекційні хвороби</p>
-                        <ul class="service-card-v2__list">
-                            <li>Діагностика</li>
-                            <li>Лікування</li>
-                            <li>Профілактика</li>
-                        </ul>
-                    </div>
-                </div>
+<?php
+// Выводим карточки из Repeater
+if( have_rows('services_cards', $section_id) ): ?>
+    <div class="services-v2__grid">
+        <?php while( have_rows('services_cards', $section_id) ): the_row();
+            $icon = get_sub_field('service_icon');
+            $title = get_sub_field('service_title');
+            $description = get_sub_field('service_description');
+        ?>
+
+        <div class="service-card-v2 reveal">
+            <?php if( $icon ): ?>
+                <div class="service-card-v2__icon"><?php echo esc_html($icon); ?></div>
+            <?php endif; ?>
+
+            <?php if( $title ): ?>
+                <div class="service-card-v2__title"><?php echo $title; ?></div>
+            <?php endif; ?>
+
+            <?php if( $description ): ?>
+                <div class="service-card-v2__desc"><?php echo $description; ?></div>
+            <?php endif; ?>
+
+            <?php if( have_rows('service_list_items') ): ?>
+                <ul class="service-card-v2__list">
+                    <?php while( have_rows('service_list_items') ): the_row();
+                        $list_item = get_sub_field('list_item');
+                        if( $list_item ): ?>
+                            <li><?php echo esc_html($list_item); ?></li>
+                        <?php endif;
+                    endwhile; ?>
+                </ul>
+            <?php endif; ?>
+        </div>
+
+        <?php endwhile; ?>
+    </div>
+<?php else: ?>
+    <!-- Если карточек нет, показываем статические -->
+    <div class="services-v2__grid">
+        <div class="service-card-v2 reveal">
+            <div class="service-card-v2__icon">🫁</div>
+            <h3 class="service-card-v2__title">Діагностика та лікування туберкульозу</h3>
+            <p class="service-card-v2__desc">Комплексна діагностика, виявлення та лікування всіх форм
+                туберкульозу з використанням сучасних методів</p>
+            <ul class="service-card-v2__list">
+                <li>Діагностика та виявлення</li>
+                <li>Рентген-діагностика</li>
+                <li>Лабораторні дослідження</li>
+                <li>Контрольоване лікування</li>
+            </ul>
+        </div>
+        <!-- ... остальные статические карточки ... -->
+    </div>
+<?php endif; ?>
+
+
             </div>
         </section>
 
