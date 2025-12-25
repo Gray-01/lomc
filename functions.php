@@ -355,3 +355,91 @@ function lomcsnih_nav_phone_styles() {
     <?php
 }
 add_action('wp_head', 'lomcsnih_nav_phone_styles', 18); // Приоритет 18 - после всего
+
+
+// НАСТРОЙКИ ДЛЯ HERO СЕКЦИИ (ДЛЯ HEX ЦВЕТОВ) таблетка
+
+function lomcsnih_check_hero_acf() {
+
+    if (is_front_page() || is_home()) {
+        echo '<!-- === ПРОВЕРКА HERO ACF (HEX) === -->';
+
+        $home_page_id = false;
+
+        if (get_option('page_on_front')) {
+            $home_page_id = get_option('page_on_front');
+            echo '<!-- Способ 1 (page_on_front): ID = ' . $home_page_id . ' -->';
+        }
+        elseif (get_option('page_for_posts')) {
+            $home_page_id = get_option('page_for_posts');
+            echo '<!-- Способ 2 (page_for_posts): ID = ' . $home_page_id . ' -->';
+        }
+        else {
+            $home_page = get_page_by_path('home');
+            if ($home_page) {
+                $home_page_id = $home_page->ID;
+                echo '<!-- Способ 3 (get_page_by_path): ID = ' . $home_page_id . ' -->';
+            }
+        }
+
+        if (!$home_page_id) {
+            echo '<!-- ОШИБКА: ID страницы Home не найден! -->';
+            return;
+        }
+
+        echo '<!-- Найден ID страницы Home: ' . $home_page_id . ' -->';
+
+        // Прямая проверка через get_post_meta (обход ACF)
+        echo '<!-- Прямая проверка через get_post_meta: -->';
+        $meta_fields = array(
+            'hero_pill_text' => 'Текст плашки',
+            'hero_pill_bg_color' => 'Цвет фона плашки (HEX)',
+            'hero_pill_text_color' => 'Цвет текста плашки (HEX)',
+            'hero_pill_border_color' => 'Цвет границы плашки (RGBA)'
+        );
+
+        foreach ($meta_fields as $field => $description) {
+            $meta_value = get_post_meta($home_page_id, $field, true);
+            echo '<!-- ' . $description . ': ' .
+                 ($meta_value !== '' ? '"' . $meta_value . '"' : 'ПУСТО') . ' -->';
+        }
+
+        // Проверяем поля ACF
+        if (function_exists('get_field')) {
+            echo '<!-- Проверка через get_field(): -->';
+            $acf_fields = array(
+                'hero_pill_text' => 'Текст плашки (ACF)',
+                'hero_pill_bg_color' => 'Цвет фона (ACF)',
+                'hero_pill_text_color' => 'Цвет текста (ACF)',
+                'hero_pill_border_color' => 'Цвет границы (ACF)'
+            );
+
+            foreach ($acf_fields as $field => $description) {
+                $acf_value = get_field($field, $home_page_id);
+                echo '<!-- ' . $description . ': ' .
+                     ($acf_value !== false && $acf_value !== null && $acf_value !== '' ?
+                      '"' . $acf_value . '"' : 'ПУСТО или false') . ' -->';
+            }
+        } else {
+            echo '<!-- ACF функция get_field() не доступна -->';
+        }
+
+        // Проверяем правила ACF
+        if (function_exists('acf_get_field_groups')) {
+            echo '<!-- Проверка групп полей ACF для страницы ID ' . $home_page_id . ': -->';
+            $groups = acf_get_field_groups(array('post_id' => $home_page_id));
+
+            if (empty($groups)) {
+                echo '<!-- НЕТ групп полей ACF для этой страницы! -->';
+                echo '<!-- Проверьте правило в ACF: Страница равна Home -->';
+            } else {
+                echo '<!-- Найдено групп: ' . count($groups) . ' -->';
+                foreach ($groups as $group) {
+                    echo '<!-- Группа: ' . $group['title'] . ' (ID: ' . $group['ID'] . ') -->';
+                }
+            }
+        }
+
+        echo '<!-- === КОНЕЦ ПРОВЕРКИ === -->';
+    }
+}

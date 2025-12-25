@@ -1,27 +1,102 @@
 <?php get_header(); ?>
 
     <main>
+
         <section class="hero section" id="home">
             <div class="container hero-grid">
                 <div class="hero-text">
-                    <div class="pill">КНП Луганської обласної ради</div>
+                    <?php
+                    // ===================================================
+                    // УНИВЕРСАЛЬНЫЙ И НАДЕЖНЫЙ СПОСОБ ДЛЯ ГЛАВНОЙ СТРАНИЦЫ
+                    // ===================================================
+
+                    // 1. ОПРЕДЕЛЯЕМ ID СТРАНИЦЫ HOME ТРЕМЯ СПОСОБАМИ
+                    $home_page_id = false;
+
+                    // Способ 1: Если страница назначена как "Главная страница"
+                    if (get_option('page_on_front')) {
+                        $home_page_id = get_option('page_on_front');
+                    }
+                    // Способ 2: Если страница Home используется как "Страница записей"
+                    elseif (get_option('page_for_posts')) {
+                        $home_page_id = get_option('page_for_posts');
+                    }
+                    // Способ 3: Ищем страницу по slug 'home'
+                    else {
+                        $home_page = get_page_by_path('home');
+                        if ($home_page) {
+                            $home_page_id = $home_page->ID;
+                        }
+                    }
+
+                    // 2. УСТАНАВЛИВАЕМ ПРАВИЛЬНЫЕ ДЕФОЛТНЫЕ ЗНАЧЕНИЯ (как в вашем CSS)
+                    // ПРАВИЛЬНЫЕ значения:
+                    $pill_text = 'КНП Луганської обласної ради';
+                    $pill_bg_color = '#ffffff1f';           // background-color: #ffffff1f
+                    $pill_text_color = '#a8b3c7';          // color: #a8b3c7
+                    $pill_border_color = '#ffffff1f';      // border-color: #ffffff1f
+
+                    // 3. ПОЛУЧАЕМ ДАННЫЕ ИЗ ACF (если ACF установлен и ID найден)
+                    if (function_exists('get_field') && $home_page_id) {
+                        // Безопасно получаем значения с проверкой на пустоту
+                        $acf_pill_text = get_field('hero_pill_text', $home_page_id);
+                        $acf_pill_bg_color = get_field('hero_pill_bg_color', $home_page_id);
+                        $acf_pill_text_color = get_field('hero_pill_text_color', $home_page_id);
+                        $acf_pill_border_color = get_field('hero_pill_border_color', $home_page_id);
+
+                        // Используем ACF значения только если они не пустые
+                        if ($acf_pill_text !== false && $acf_pill_text !== null && $acf_pill_text !== '') {
+                            $pill_text = $acf_pill_text;
+                        }
+                        if ($acf_pill_bg_color !== false && $acf_pill_bg_color !== null && $acf_pill_bg_color !== '') {
+                            $pill_bg_color = $acf_pill_bg_color;
+                        }
+                        if ($acf_pill_text_color !== false && $acf_pill_text_color !== null && $acf_pill_text_color !== '') {
+                            $pill_text_color = $acf_pill_text_color;
+                        }
+                        if ($acf_pill_border_color !== false && $acf_pill_border_color !== null && $acf_pill_border_color !== '') {
+                            $pill_border_color = $acf_pill_border_color;
+                        }
+                    }
+
+                    // 4. ВКЛЮЧАЕМ ОТЛАДКУ (можно отключить после проверки)
+                    // echo '<!-- Debug: Цвет фона = ' . esc_attr($pill_bg_color) . ' -->';
+                    // echo '<!-- Debug: Цвет текста = ' . esc_attr($pill_text_color) . ' -->';
+                    // echo '<!-- Debug: Цвет границы = ' . esc_attr($pill_border_color) . ' -->';
+                    ?>
+
+                    <!-- ПИЛЮЛЯ с inline стилями -->
+                    <div class="pill" style="
+                        background: <?php echo esc_attr($pill_bg_color); ?>;
+                        border-color: <?php echo esc_attr($pill_border_color); ?>;
+                        color: <?php echo esc_attr($pill_text_color); ?>;">
+                        <?php echo esc_html($pill_text); ?>
+                    </div>
+
+                    <!-- ЗАГОЛОВОК (пока статичный, потом добавим ACF) -->
                     <h1>
                         Луганський обласний медичний центр<br>
                         <span class="gradient-text">соціально небезпечних інфекційних хвороб</span>
                     </h1>
+
+                    <!-- ОПИСАНИЕ (пока статичное, потом добавим ACF) -->
                     <p class="lead">
-                        Метою діяльності Підприємства є організація та надання третинної (високоспеціалізованої)
+                        Метою діяльності Підприємства є організация та надання третинної (високоспеціалізованої)
                         медичної допомоги з лікування та профілактики захворюваності на туберкульоз, ВІЛ-інфекції/СНІД
                         та інші соціально небезпечні інфекційні хвороби в амбулаторних та стаціонарних умовах, у
                         плановому та екстреному випадках, проведення діагностики, надання консультацій, психосоціальна
                         підтримка та медична реабілітація пацієнтів (хворих) незалежно від місця їх проживання та адреси
                         реєстрації.
                     </p>
+
+                    <!-- КНОПКИ (пока статичные, потом добавим ACF) -->
                     <div class="hero-actions">
                         <a href="#contacts" class="btn primary">Зв'язатися</a>
                         <a href="#mission" class="btn ghost">Дізнатись більше</a>
                     </div>
                 </div>
+
+                <!-- ИЗОБРАЖЕНИЕ (пока статичное, потом добавим ACF) -->
                 <div class="hero-image reveal">
                     <div class="image-wrapper">
                         <img src="<?php echo get_template_directory_uri(); ?>/assets/images/main.jpg" alt="Фото медичного центру">
