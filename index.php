@@ -59,10 +59,6 @@
                         }
                     }
 
-                    // 4. ВКЛЮЧАЕМ ОТЛАДКУ (можно отключить после проверки)
-                    // echo '<!-- Debug: Цвет фона = ' . esc_attr($pill_bg_color) . ' -->';
-                    // echo '<!-- Debug: Цвет текста = ' . esc_attr($pill_text_color) . ' -->';
-                    // echo '<!-- Debug: Цвет границы = ' . esc_attr($pill_border_color) . ' -->';
                     ?>
 
                     <!-- ПИЛЮЛЯ с inline стилями -->
@@ -73,21 +69,101 @@
                         <?php echo esc_html($pill_text); ?>
                     </div>
 
-                    <!-- ЗАГОЛОВОК (пока статичный, потом добавим ACF) -->
-                    <h1>
-                        Луганський обласний медичний центр<br>
-                        <span class="gradient-text">соціально небезпечних інфекційних хвороб</span>
-                    </h1>
 
-                    <!-- ОПИСАНИЕ (пока статичное, потом добавим ACF) -->
-                    <p class="lead">
-                        Метою діяльності Підприємства є організация та надання третинної (високоспеціалізованої)
-                        медичної допомоги з лікування та профілактики захворюваності на туберкульоз, ВІЛ-інфекції/СНІД
-                        та інші соціально небезпечні інфекційні хвороби в амбулаторних та стаціонарних умовах, у
-                        плановому та екстреному випадках, проведення діагностики, надання консультацій, психосоціальна
-                        підтримка та медична реабілітація пацієнтів (хворих) незалежно від місця їх проживання та адреси
-                        реєстрації.
-                    </p>
+                <?php
+
+// ПОЛУЧАЕМ ДАННЫЕ ДЛЯ ЗАГОЛОВКА И ТЕКСТА
+
+$home_page_id = false;
+
+if (get_option('page_on_front')) {
+    $home_page_id = get_option('page_on_front');
+}
+elseif (get_option('page_for_posts')) {
+    $home_page_id = get_option('page_for_posts');
+}
+else {
+    $home_page = get_page_by_path('home');
+    if ($home_page) {
+        $home_page_id = $home_page->ID;
+    }
+}
+
+// 2. Дефолтные значения для заголовка и текста
+$title_line1 = 'Луганський обласний медичний центр';
+$title_line2 = 'соціально небезпечних інфекційних хвороб';
+$title_color1 = '#e7ecf5';
+$gradient_start = '#59f0ff';
+$gradient_end = '#7c6bff';
+$description = 'Метою діяльності Підприємства є організація та надання третинної (високоспеціалізованої) медичної допомоги з лікування та профілактики захворюваності на туберкульоз, ВІЛ-інфекції/СНІД та інші соціально небезпечні інфекційні хвороби в амбулаторних та стаціонарних умовах, у плановому та екстреному випадках, проведення діагностики, надання консультацій, психосоціальна підтримка та медична реабілітація пацієнтів (хворих) незалежно від місця їх проживання та адреси реєстрації.';
+$description_color = '#a8b3c7';
+
+// 3. Получаем данные из ACF (если ACF установлен и ID найден)
+if (function_exists('get_field') && $home_page_id) {
+    // Заголовок (WYSIWYG поля)
+    $acf_title_line1 = get_field('hero_title_line1', $home_page_id);
+    $acf_title_line2 = get_field('hero_title_line2', $home_page_id);
+    $acf_title_color1 = get_field('hero_title_color1', $home_page_id);
+    $acf_gradient_start = get_field('hero_gradient_start', $home_page_id);
+    $acf_gradient_end = get_field('hero_gradient_end', $home_page_id);
+
+    // Для WYSIWGY полей проверяем наличие контента
+    if ($acf_title_line1 !== false && $acf_title_line1 !== null && trim($acf_title_line1) !== '') {
+        $title_line1 = $acf_title_line1;
+    }
+    if ($acf_title_line2 !== false && $acf_title_line2 !== null && trim($acf_title_line2) !== '') {
+        $title_line2 = $acf_title_line2;
+    }
+    if (!empty($acf_title_color1)) $title_color1 = $acf_title_color1;
+    if (!empty($acf_gradient_start)) $gradient_start = $acf_gradient_start;
+    if (!empty($acf_gradient_end)) $gradient_end = $acf_gradient_end;
+
+    // Текст (WYSIWYG)
+    $acf_description = get_field('hero_description', $home_page_id);
+    $acf_description_color = get_field('hero_description_color', $home_page_id);
+
+    if ($acf_description !== false && $acf_description !== null && trim($acf_description) !== '') {
+        $description = $acf_description;
+    }
+    if (!empty($acf_description_color)) $description_color = $acf_description_color;
+}
+
+// 4. Безопасная обработка HTML для заголовков (разрешаем безопасные теги)
+$allowed_title_tags = array(
+    'a' => array(
+        'href' => array(),
+        'title' => array(),
+        'target' => array(),
+        'class' => array(),
+        'id' => array()
+    ),
+    'strong' => array(),
+    'em' => array(),
+    'b' => array(),
+    'i' => array(),
+    'span' => array(
+        'class' => array(),
+        'style' => array()
+    ),
+    'br' => array()
+);
+?>
+
+<!-- ЗАГОЛОВОК С ГРАДИЕНТОМ (WYSIWYG редактор) -->
+<h1 style="color: <?php echo esc_attr($title_color1); ?>;">
+    <?php echo wp_kses($title_line1, $allowed_title_tags); ?><br>
+    <span class="gradient-text" style="background: linear-gradient(120deg, <?php echo esc_attr($gradient_start); ?>, <?php echo esc_attr($gradient_end); ?>);
+                                       -webkit-background-clip: text;
+                                       background-clip: text;
+                                       color: transparent;">
+        <?php echo wp_kses($title_line2, $allowed_title_tags); ?>
+    </span>
+</h1>
+
+<!-- ТЕКСТ ОПИСАНИЯ (WYSIWYG редактор) -->
+<div class="lead" style="color: <?php echo esc_attr($description_color); ?>;">
+    <?php echo apply_filters('the_content', $description); ?>
+</div>
 
                     <!-- КНОПКИ (пока статичные, потом добавим ACF) -->
                     <div class="hero-actions">
