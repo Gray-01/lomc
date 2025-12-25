@@ -443,3 +443,21 @@ function lomcsnih_check_hero_acf() {
         echo '<!-- === КОНЕЦ ПРОВЕРКИ === -->';
     }
 }
+
+
+// Создаем тип записи для секций сайта
+function create_site_sections_cpt() {
+    $args = array(
+        'public' => true,
+        'label'  => 'Секции сайта',
+        'menu_icon' => 'dashicons-layout',
+        'supports' => array('title', 'editor', 'custom-fields'),
+        'show_in_rest' => true,
+        'has_archive' => false,
+        'publicly_queryable' => false,
+        'exclude_from_search' => true,
+        'menu_position' => 20,
+    );
+    register_post_type('site_sections', $args);
+}
+add_action('init', 'create_site_sections_cpt');

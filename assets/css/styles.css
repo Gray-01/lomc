@@ -1150,3 +1150,29 @@ h2 {
         background: rgba(255, 255, 255, 0.04);
     }
 }
+
+/* Сброс стилей WordPress для параграфов в секции Миссия */
+#mission .section-head .eyebrow p,
+#mission .section-head h2 p,
+#mission .section-head .muted p {
+    all: initial !important;
+    display: inline !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    line-height: inherit !important;
+    font-size: inherit !important;
+    font-weight: inherit !important;
+    color: inherit !important;
+    text-transform: inherit !important;
+    letter-spacing: inherit !important;
+    opacity: inherit !important;
+    max-width: inherit !important;
+}
+
+/* Гарантируем, что контейнеры наследуют стили */
+#mission .section-head .eyebrow,
+#mission .section-head h2,
+#mission .section-head .muted {
+    display: block;
+    width: 100%;
+}

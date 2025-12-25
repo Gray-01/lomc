@@ -227,13 +227,75 @@
 
 </section>
 
-        <section class="section mission" id="mission">
+                <section class="section mission" id="mission">
             <div class="container">
+                <?php
+                $mission_section = get_posts(array(
+                    'post_type' => 'site_sections',
+                    'title' => 'Секция: Миссия',
+                    'post_status' => 'publish',
+                    'numberposts' => 1
+                ));
+
+                if($mission_section) :
+                    $section_id = $mission_section[0]->ID;
+
+                    // Получаем цвета
+                    $eyebrow_color = get_field('mission_eyebrow_color', $section_id) ?: '#a8b3c7';
+                    $heading_color = get_field('mission_heading_color', $section_id) ?: '#e7ecf5';
+                    $description_color = get_field('mission_description_color', $section_id) ?: '#a8b3c7';
+                ?>
+
+                <!-- Инлайн стили для цветов -->
+                <style>
+                    /* Сбрасываем стили WordPress для параграфов */
+                    #mission .section-head .eyebrow p,
+                    #mission .section-head h2 p,
+                    #mission .section-head .muted p {
+                        all: initial !important;
+                        all: unset !important;
+                        display: inline !important;
+                        margin: 0 !important;
+                        padding: 0 !important;
+                        line-height: inherit !important;
+                        font-size: inherit !important;
+                        font-weight: inherit !important;
+                        color: inherit !important;
+                    }
+
+                    /* Применяем кастомные цвета */
+                    #mission .section-head .eyebrow,
+                    #mission .section-head .eyebrow * {
+                        color: <?php echo esc_attr($eyebrow_color); ?> !important;
+                    }
+
+                    #mission .section-head h2,
+                    #mission .section-head h2 * {
+                        color: <?php echo esc_attr($heading_color); ?> !important;
+                    }
+
+                    #mission .section-head .muted,
+                    #mission .section-head .muted * {
+                        color: <?php echo esc_attr($description_color); ?> !important;
+                    }
+                </style>
+
                 <div class="section-head">
-                    <p class="eyebrow">Наш курс</p>
-                    <h2>Місія, переміщення і роль</h2>
-                    <p class="muted">Вся ключова інформація про заклад, його задачі та координуючу роль в області.</p>
+                    <?php if( $eyebrow = get_field('mission_eyebrow', $section_id) ): ?>
+                        <div class="eyebrow"><?php echo $eyebrow; ?></div>
+                    <?php endif; ?>
+
+                    <?php if( $heading = get_field('mission_heading', $section_id) ): ?>
+                        <h2><?php echo $heading; ?></h2>
+                    <?php endif; ?>
+
+                    <?php if( $description = get_field('mission_description', $section_id) ): ?>
+                        <div class="muted"><?php echo $description; ?></div>
+                    <?php endif; ?>
                 </div>
+
+                <?php endif; ?>
+
                 <div class="card-grid">
                     <article class="card reveal">
                         <div class="card-icon">📍</div>
