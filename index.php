@@ -554,73 +554,106 @@ if ($structure_section) :
 <?php endif; ?>
 
 
-                <div class="structure-grid-wp">
-                    <div class="structure-card reveal">
-                        <div class="structure-card-icon">🏥</div>
-                        <h3 class="structure-card-title">Диспансерне відділення</h3>
-                    </div>
-                    <div class="structure-card reveal">
-                        <div class="structure-card-icon">🩺</div>
-                        <h3 class="structure-card-title">Міжрайонний протитуберкульозний кабінет /"Довіра"/сайт АРТ</h3>
-                    </div>
-                    <div class="structure-card reveal">
-                        <div class="structure-card-icon">💉</div>
-                        <h3 class="structure-card-title">Відділення легеневого туберкульозу №1</h3>
-                    </div>
-                    <div class="structure-card reveal">
-                        <div class="structure-card-icon">🫁</div>
-                        <h3 class="structure-card-title">Відділення легеневого туберкульозу №2</h3>
-                    </div>
-                    <div class="structure-card reveal">
-                        <div class="structure-card-icon">📊</div>
-                        <h3 class="structure-card-title">Кабінет з функціональної діагностики</h3>
-                    </div>
-                    <div class="structure-card reveal">
-                        <div class="structure-card-icon">💊</div>
-                        <h3 class="structure-card-title">Кабінет контрольованого лікування</h3>
-                    </div>
-                    <div class="structure-card reveal">
-                        <div class="structure-card-icon">🦠</div>
-                        <h3 class="structure-card-title">Відділення для лікування хворих на ВІЛ/СНІД №3</h3>
-                    </div>
-                    <div class="structure-card reveal">
-                        <div class="structure-card-icon">👨‍⚕️</div>
-                        <h3 class="structure-card-title">Амбулаторно-поліклінічне відділення</h3>
-                    </div>
-                    <div class="structure-card reveal">
-                        <div class="structure-card-icon">🏥</div>
-                        <h3 class="structure-card-title">Кабінет "Довіра"</h3>
-                    </div>
-                    <div class="structure-card reveal">
-                        <div class="structure-card-icon">👶</div>
-                        <h3 class="structure-card-title">Дитяче лікувально-діагностичне відділення</h3>
-                    </div>
-                    <div class="structure-card reveal">
-                        <div class="structure-card-icon">📈</div>
-                        <h3 class="structure-card-title">Відділ моніторингу і оцінки (МіО)</h3>
-                    </div>
-                    <div class="structure-card reveal">
-                        <div class="structure-card-icon">📷</div>
-                        <h3 class="structure-card-title">Рентген-діагностичне відділення</h3>
-                    </div>
-                    <div class="structure-card reveal">
-                        <div class="structure-card-icon">🔬</div>
-                        <h3 class="structure-card-title">Клініко-діагностична лабораторія</h3>
-                    </div>
-                    <div class="structure-card reveal">
-                        <div class="structure-card-icon">🧫</div>
-                        <h3 class="structure-card-title">Відділ бактеріології</h3>
-                    </div>
-                    <div class="structure-card reveal">
-                        <div class="structure-card-icon">🧪</div>
-                        <h3 class="structure-card-title">Відділ діагностики ВІЛ та вірусних гепатитів, сифілісу та інших
-                            Torch-інфекцій</h3>
-                    </div>
-                    <div class="structure-card reveal">
-                        <div class="structure-card-icon">🔍</div>
-                        <h3 class="structure-card-title">Кабінет ендоскопічний</h3>
-                    </div>
+               <?php
+// Выводим карточки из Repeater
+if( have_rows('structure_cards', $section_id) ): ?>
+    <div class="structure-grid-wp">
+        <?php while( have_rows('structure_cards', $section_id) ): the_row();
+            $icon = get_sub_field('structure_card_icon');
+            $title = get_sub_field('structure_card_title');
+        ?>
+
+        <div class="structure-card reveal">
+            <?php if( $icon ): ?>
+                <div class="structure-card-icon"><?php echo esc_html($icon); ?></div>
+            <?php endif; ?>
+
+            <?php if( $title ): ?>
+                <div class="structure-card-title">
+                    <?php
+                    // Очищаем от тегов <p>
+                    $clean_title = strip_tags($title, '<strong><em><a><span><br>');
+                    $clean_title = str_replace(array('<p>', '</p>'), '', $clean_title);
+                    echo $clean_title;
+                    ?>
                 </div>
+            <?php endif; ?>
+        </div>
+
+        <?php endwhile; ?>
+    </div>
+<?php else: ?>
+    <!-- Если карточек нет, показываем статические -->
+    <div class="structure-grid-wp">
+        <div class="structure-card reveal">
+            <div class="structure-card-icon">🏥</div>
+            <h3 class="structure-card-title">Диспансерне відділення</h3>
+        </div>
+        <div class="structure-card reveal">
+            <div class="structure-card-icon">🩺</div>
+            <h3 class="structure-card-title">Міжрайонний протитуберкульозний кабінет /"Довіра"/сайт АРТ</h3>
+        </div>
+        <div class="structure-card reveal">
+            <div class="structure-card-icon">💉</div>
+            <h3 class="structure-card-title">Відділення легеневого туберкульозу №1</h3>
+        </div>
+        <div class="structure-card reveal">
+            <div class="structure-card-icon">🫁</div>
+            <h3 class="structure-card-title">Відділення легеневого туберкульозу №2</h3>
+        </div>
+        <div class="structure-card reveal">
+            <div class="structure-card-icon">📊</div>
+            <h3 class="structure-card-title">Кабінет з функціональної діагностики</h3>
+        </div>
+        <div class="structure-card reveal">
+            <div class="structure-card-icon">💊</div>
+            <h3 class="structure-card-title">Кабінет контрольованого лікування</h3>
+        </div>
+        <div class="structure-card reveal">
+            <div class="structure-card-icon">🦠</div>
+            <h3 class="structure-card-title">Відділення для лікування хворих на ВІЛ/СНІД №3</h3>
+        </div>
+        <div class="structure-card reveal">
+            <div class="structure-card-icon">👨‍⚕️</div>
+            <h3 class="structure-card-title">Амбулаторно-поліклінічне відділення</h3>
+        </div>
+        <div class="structure-card reveal">
+            <div class="structure-card-icon">🏥</div>
+            <h3 class="structure-card-title">Кабінет "Довіра"</h3>
+        </div>
+        <div class="structure-card reveal">
+            <div class="structure-card-icon">👶</div>
+            <h3 class="structure-card-title">Дитяче лікувально-діагностичне відділення</h3>
+        </div>
+        <div class="structure-card reveal">
+            <div class="structure-card-icon">📈</div>
+            <h3 class="structure-card-title">Відділ моніторингу і оцінки (МіО)</h3>
+        </div>
+        <div class="structure-card reveal">
+            <div class="structure-card-icon">📷</div>
+            <h3 class="structure-card-title">Рентген-діагностичне відділення</h3>
+        </div>
+        <div class="structure-card reveal">
+            <div class="structure-card-icon">🔬</div>
+            <h3 class="structure-card-title">Клініко-діагностична лабораторія</h3>
+        </div>
+        <div class="structure-card reveal">
+            <div class="structure-card-icon">🧫</div>
+            <h3 class="structure-card-title">Відділ бактеріології</h3>
+        </div>
+        <div class="structure-card reveal">
+            <div class="structure-card-icon">🧪</div>
+            <h3 class="structure-card-title">Відділ діагностики ВІЛ та вірусних гепатитів, сифілісу та інших
+                Torch-інфекцій</h3>
+        </div>
+        <div class="structure-card reveal">
+            <div class="structure-card-icon">🔍</div>
+            <h3 class="structure-card-title">Кабінет ендоскопічний</h3>
+        </div>
+    </div>
+<?php endif; ?>
+
+
             </div>
         </section>
 
