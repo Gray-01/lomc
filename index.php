@@ -1017,40 +1017,178 @@ if( have_rows('team_cards', $section_id) ): ?>
     </div>
 <?php endif; ?>
 
-
             </div>
         </section>
 
         <section class="section contacts" id="contacts">
+
+        <?php
+        // НАХОДИМ ЗАПИСЬ СЕКЦИИ "КОНТАКТЫ"
+        $contacts_section = get_posts(array(
+            'post_type' => 'site_sections', // ТАК ЖЕ КАК У ДРУГИХ СЕКЦИЙ!
+            'title' => 'Контакты', // ИЛИ 'Секция: Контакты' если так называется
+            'post_status' => 'publish',
+            'numberposts' => 1
+        ));
+
+        if($contacts_section) :
+            $section_id = $contacts_section[0]->ID;
+
+            // ПРОВЕРЯЕМ, ЕСТЬ ЛИ КАРТОЧКИ КОНТАКТОВ
+            if(have_rows('contacts_cards', $section_id)):
+        ?>
+
+        <section class="section contacts" id="contacts">
             <div class="container contacts-grid">
-                <div class="contact-card reveal">
-                    <p class="eyebrow">Поточна адреса</p>
-                    <h3>Черкаська область, Черкаський р-н,<br>с. Геронимівка, вул. Диспансерна, 1</h3>
-                </div>
-                <div class="contact-card reveal">
-                    <p class="eyebrow">Юридична адреса</p>
-                    <h3>93400, Луганська область,<br>м. Сіверськодонецьк, вул. Сметаніна, 5</h3>
-                </div>
-                <div class="contact-card reveal">
-                    <p class="eyebrow">Телефон для довідок</p>
-                    <a class="phone-large" href="tel:+380506833065">(050) 683-30-65</a>
-                </div>
-                <div class="contact-card anticor-card reveal">
-                    <p class="eyebrow">🛡️ Антикорупційний розділ</p>
-                    <h3>Повідомити про факти корупції</h3>
-                    <div class="anticor-contacts">
-                        <a href="mailto:anticor.lomtsnih@ukr.net" class="anticor-link">
-                            <span class="anticor-icon">✉️</span>
-                            <span>anticor.lomtsnih@ukr.net</span>
+
+                <?php while(have_rows('contacts_cards', $section_id)): the_row();
+                    $card_type = get_sub_field('card_type');
+                    $eyebrow = get_sub_field('card_eyebrow');
+                    $content = get_sub_field('card_content');
+                    $phone = get_sub_field('phone_number');
+                    $email = get_sub_field('email_address');
+                    $hover_color = get_sub_field('hover_color') ?: '#59f0ff';
+                    $font_size = get_sub_field('font_size');
+
+                    // Определяем классы для карточки
+                    $card_classes = 'contact-card reveal';
+                    if($card_type == 'anticor') {
+                        $card_classes .= ' anticor-card';
+                    }
+
+                    // Создаем инлайн стили
+                    $styles = '';
+
+                    // Стиль для ховера (только для phone и anticor)
+                    if($card_type == 'phone' || $card_type == 'anticor') {
+                        $styles .= '--hover-color: ' . esc_attr($hover_color) . ';';
+                    }
+
+                    $style_attr = $styles ? 'style="' . $styles . '"' : '';
+                ?>
+
+                <div class="<?php echo esc_attr($card_classes); ?>" <?php echo $style_attr; ?>>
+
+                    <?php if($eyebrow): ?>
+                        <p class="eyebrow"><?php echo esc_html($eyebrow); ?></p>
+                    <?php endif; ?>
+
+                    <?php if($card_type == 'phone' && $phone): ?>
+                        <?php
+                        $phone_style = $font_size ? 'style="font-size: ' . intval($font_size) . 'px !important;"' : '';
+                        ?>
+                        <a class="phone-large" href="tel:<?php echo esc_attr($phone); ?>" <?php echo $phone_style; ?>>
+                            <?php echo esc_html($phone); ?>
                         </a>
-                        <a href="tel:+380506833065" class="anticor-link">
-                            <span class="anticor-icon">📞</span>
-                            <span>(050) 683-30-65</span>
-                        </a>
-                    </div>
+
+                    <?php elseif($card_type == 'anticor'): ?>
+                        <?php if($content): ?>
+                            <?php
+                            $title_style = $font_size ? 'style="font-size: ' . intval($font_size) . 'px !important;"' : '';
+                            ?>
+                            <h3 <?php echo $title_style; ?>><?php echo nl2br(esc_html($content)); ?></h3>
+                        <?php endif; ?>
+
+                        <div class="anticor-contacts">
+                            <?php if($email): ?>
+                                <a href="mailto:<?php echo esc_attr($email); ?>" class="anticor-link">
+                                    <span class="anticor-icon">✉️</span>
+                                    <span><?php echo esc_html($email); ?></span>
+                                </a>
+                            <?php endif; ?>
+
+                            <?php if($phone): ?>
+                                <a href="tel:<?php echo esc_attr($phone); ?>" class="anticor-link">
+                                    <span class="anticor-icon">📞</span>
+                                    <span><?php echo esc_html($phone); ?></span>
+                                </a>
+                            <?php endif; ?>
+                        </div>
+
+                    <?php else: // address_current или address_legal ?>
+                        <?php if($content): ?>
+                            <?php
+                            $address_style = $font_size ? 'style="font-size: ' . intval($font_size) . 'px !important;"' : '';
+                            ?>
+                            <h3 <?php echo $address_style; ?>><?php echo nl2br(esc_html($content)); ?></h3>
+                        <?php endif; ?>
+                    <?php endif; ?>
+
                 </div>
+
+                <?php endwhile; ?>
+
             </div>
         </section>
+
+        <?php else: ?>
+            <!-- ЕСЛИ НЕТ КАРТОЧЕК, ПОКАЗЫВАЕМ СТАТИЧЕСКИЕ -->
+            <section class="section contacts" id="contacts">
+                <div class="container contacts-grid">
+                    <div class="contact-card reveal">
+                        <p class="eyebrow">Поточна адреса</p>
+                        <h3>Черкаська область, Черкаський р-н,<br>с. Геронимівка, вул. Диспансерна, 1</h3>
+                    </div>
+                    <div class="contact-card reveal">
+                        <p class="eyebrow">Юридична адреса</p>
+                        <h3>93400, Луганська область,<br>м. Сіверськодонецьк, вул. Сметаніна, 5</h3>
+                    </div>
+                    <div class="contact-card reveal">
+                        <p class="eyebrow">Телефон для довідок</p>
+                        <a class="phone-large" href="tel:+380506833065">(050) 683-30-65</a>
+                    </div>
+                    <div class="contact-card anticor-card reveal">
+                        <p class="eyebrow">🛡️ Антикорупційний розділ</p>
+                        <h3>Повідомити про факти корупції</h3>
+                        <div class="anticor-contacts">
+                            <a href="mailto:anticor.lomtsnih@ukr.net" class="anticor-link">
+                                <span class="anticor-icon">✉️</span>
+                                <span>anticor.lomtsnih@ukr.net</span>
+                            </a>
+                            <a href="tel:+380506833065" class="anticor-link">
+                                <span class="anticor-icon">📞</span>
+                                <span>(050) 683-30-65</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        <?php endif; ?>
+
+        <?php else: ?>
+            <!-- ЕСЛИ СЕКЦИЯ НЕ НАЙДЕНА, ПОКАЗЫВАЕМ СТАТИЧЕСКИЕ -->
+            <section class="section contacts" id="contacts">
+                <div class="container contacts-grid">
+                    <div class="contact-card reveal">
+                        <p class="eyebrow">Поточна адреса</p>
+                        <h3>Черкаська область, Черкаський р-н,<br>с. Геронимівка, вул. Диспансерна, 1</h3>
+                    </div>
+                    <div class="contact-card reveal">
+                        <p class="eyebrow">Юридична адреса</p>
+                        <h3>93400, Луганська область,<br>м. Сіверськодонецьк, вул. Сметаніна, 5</h3>
+                    </div>
+                    <div class="contact-card reveal">
+                        <p class="eyebrow">Телефон для довідок</p>
+                        <a class="phone-large" href="tel:+380506833065">(050) 683-30-65</a>
+                    </div>
+                    <div class="contact-card anticor-card reveal">
+                        <p class="eyebrow">🛡️ Антикорупційний розділ</p>
+                        <h3>Повідомити про факти корупції</h3>
+                        <div class="anticor-contacts">
+                            <a href="mailto:anticor.lomtsnih@ukr.net" class="anticor-link">
+                                <span class="anticor-icon">✉️</span>
+                                <span>anticor.lomtsnih@ukr.net</span>
+                            </a>
+                            <a href="tel:+380506833065" class="anticor-link">
+                                <span class="anticor-icon">📞</span>
+                                <span>(050) 683-30-65</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        <?php endif; ?>
+
     </main>
 
 <?php get_footer(); ?>

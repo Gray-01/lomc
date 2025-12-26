@@ -1260,3 +1260,19 @@ h2 {
     color: var(--accent) !important;
     font-weight: 700 !important;
 }
+
+/* карточки контактов wp */
+
+/* Стили для ховер-эффектов контактов */
+.contact-card .phone-large:hover {
+    color: var(--hover-color, #59f0ff) !important;
+}
+
+.contact-card.anticor-card .anticor-link:hover {
+    background: rgba(255, 107, 107, 0.15) !important;
+    transform: translateX(4px) !important;
+}
+
+.contact-card.anticor-card .anticor-link:hover span {
+    color: var(--hover-color, #59f0ff) !important;
+}
