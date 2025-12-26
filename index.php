@@ -658,11 +658,80 @@ if( have_rows('structure_cards', $section_id) ): ?>
         </section>
 
 
-        <section class="section team" id="team">
+                <section class="section team" id="team">
             <div class="container">
+                <?php
+                // Находим запись секции "Команда"
+                $team_section = get_posts(array(
+                    'post_type' => 'site_sections',
+                    'title' => 'Секция: Команда',
+                    'post_status' => 'publish',
+                    'numberposts' => 1
+                ));
+
+                if($team_section) :
+                    $section_id = $team_section[0]->ID;
+
+                    // Получаем значения
+                    $heading = get_field('team_main_heading', $section_id);
+                    $size = get_field('team_heading_size', $section_id) ?: 32;
+                    $width = get_field('team_heading_width', $section_id) ?: 1200;
+                    $align = get_field('team_heading_align', $section_id) ?: 'center';
+                    $color1 = get_field('team_gradient_color_1', $section_id) ?: '#59f0ff';
+                    $color2 = get_field('team_gradient_color_2', $section_id) ?: '#7c6bff';
+                ?>
+
+                <style>
+                    /* Градиент для заголовка секции Команда */
+                    #team .portrait-header .header-title,
+                    #team .portrait-header .header-title * {
+                        background: linear-gradient(135deg, <?php echo esc_attr($color1); ?>, <?php echo esc_attr($color2); ?>) !important;
+                        -webkit-background-clip: text !important;
+                        background-clip: text !important;
+                        color: transparent !important;
+                        font-size: <?php echo esc_attr($size); ?>px !important;
+                        max-width: <?php echo esc_attr($width); ?>px !important;
+                        text-align: <?php echo esc_attr($align); ?> !important;
+                        margin-left: auto !important;
+                        margin-right: auto !important;
+                    }
+
+                    /* Сброс стилей WordPress для параграфов внутри */
+                    #team .portrait-header .header-title p {
+                        margin: 0 !important;
+                        padding: 0 !important;
+                        display: inline !important;
+                        color: inherit !important;
+                        font-size: inherit !important;
+                        font-weight: inherit !important;
+                        line-height: inherit !important;
+                        text-align: inherit !important;
+                        background: inherit !important;
+                        -webkit-background-clip: inherit !important;
+                        background-clip: inherit !important;
+                    }
+                </style>
+
                 <div class="portrait-header">
-                    <h2 class="header-title">Керівництво</h2>
+                    <?php if( $heading ): ?>
+                        <h2 class="header-title">
+                            <?php
+                            // Очищаем от тегов <p>
+                            $clean_heading = strip_tags($heading, '<strong><em><a><span><br>');
+                            $clean_heading = str_replace(array('<p>', '</p>'), '', $clean_heading);
+                            echo $clean_heading;
+                            ?>
+                        </h2>
+                    <?php endif; ?>
                 </div>
+
+                <?php else: ?>
+                    <!-- Если секция не найдена, показываем статический -->
+                    <div class="portrait-header">
+                        <h2 class="header-title">Керівництво</h2>
+                    </div>
+                <?php endif; ?>
+
                 <div class="portrait-grid">
                     <div class="portrait-card main reveal">
                         <div class="portrait-frame">
