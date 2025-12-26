@@ -732,80 +732,292 @@ if( have_rows('structure_cards', $section_id) ): ?>
                     </div>
                 <?php endif; ?>
 
-                <div class="portrait-grid">
-                    <div class="portrait-card main reveal">
-                        <div class="portrait-frame">
-                            <div class="portrait-initials">👔</div>
-                        </div>
-                        <div class="portrait-info">
-                            <h3>Нужний Роман Андрійович</h3>
-                            <p>Генеральний директор</p>
-                        </div>
-                    </div>
-                    <div class="portrait-card main reveal">
-                        <div class="portrait-frame">
-                            <div class="portrait-initials">👨‍⚕️</div>
-                        </div>
-                        <div class="portrait-info">
-                            <h3>Джаббаров Адалат Магомед Огли</h3>
-                            <p>Медичний директор</p>
-                        </div>
-                    </div>
-                    <div class="portrait-card reveal">
-                        <div class="portrait-frame">
-                            <div class="portrait-initials">💼</div>
-                        </div>
-                        <div class="portrait-info">
-                            <h3>Михайлюченко Лідія Борисівна</h3>
-                            <p>Заступник генерального директора з економічних питань</p>
-                        </div>
-                    </div>
-                    <div class="portrait-card reveal">
-                        <div class="portrait-frame">
-                            <div class="portrait-initials">🏥</div>
-                        </div>
-                        <div class="portrait-info">
-                            <h3>Попкова Оксана Валентинівна</h3>
-                            <p>Завідувач диспансерного відділення</p>
-                        </div>
-                    </div>
-                    <div class="portrait-card reveal">
-                        <div class="portrait-frame">
-                            <div class="portrait-initials">🫁</div>
-                        </div>
-                        <div class="portrait-info">
-                            <h3>Дранник Антон Ігорович</h3>
-                            <p>Завідувач Відділення легеневого туберкульозу №1</p>
-                        </div>
-                    </div>
-                    <div class="portrait-card reveal">
-                        <div class="portrait-frame">
-                            <div class="portrait-initials">🩺</div>
-                        </div>
-                        <div class="portrait-info">
-                            <h3>Нужна Олена Юріївна</h3>
-                            <p>Завідувач амбулаторно-поліклінічного відділення</p>
-                        </div>
-                    </div>
-                    <div class="portrait-card reveal">
-                        <div class="portrait-frame">
-                            <div class="portrait-initials">📷</div>
-                        </div>
-                        <div class="portrait-info">
-                            <h3>Кучеренко Інна Ремівна</h3>
-                            <p>Завідувач рентгендіагностичного відділення</p>
-                        </div>
-                    </div>
-                    <div class="portrait-card reveal">
-                        <div class="portrait-frame">
-                            <div class="portrait-initials">👨‍⚕️</div>
-                        </div>
-                        <div class="portrait-info">
-                            <h3>Ринковий Олександр Михайлович</h3>
-                            <p>Головний медичний брат</p>
-                        </div>
-                    </div>
+                    <?php
+// Выводим карточки из Repeater
+if( have_rows('team_cards', $section_id) ): ?>
+
+    <style>
+    /* ФИКСИРОВАННЫЙ грид с 4 колонками */
+    #team .portrait-grid {
+        display: grid !important;
+        grid-template-columns: repeat(4, 1fr) !important; /* 4 равные колонки */
+        gap: 30px !important;
+    }
+
+    /* УБИРАЕМ ВСЕ РАМКИ И ФОНЫ У САМИХ КАРТОЧЕК */
+    #team .portrait-grid .portrait-card {
+        background: transparent !important; /* Прозрачный фон карточки */
+        border: none !important; /* Убираем рамку у карточки */
+        padding: 0 !important; /* Убираем отступы у карточки */
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
+        text-align: center !important;
+        position: relative !important;
+    }
+
+    /* Большие карточки занимают 2 колонки из 4 */
+    #team .portrait-grid .portrait-card.main {
+        grid-column: span 2 !important; /* Занимает 2/4 = 1/2 ширины */
+    }
+
+    /* Маленькие карточки - 1 колонку */
+    #team .portrait-grid .portrait-card:not(.main) {
+        grid-column: span 1 !important;
+    }
+
+    /* РАМКА ВОКРУГ ИКОНКИ (portrait-frame) - ДЛЯ ВСЕХ КАРТОЧЕК */
+    #team .portrait-grid .portrait-card .portrait-frame {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        margin-bottom: 20px !important;
+        width: 100% !important;
+        max-width: 200px !important;
+        min-height: 120px !important;
+        position: relative !important;
+        transition: all 0.3s ease !important; /* Добавляем transition для плавности */
+    }
+
+    /* Для маленьких карточек - точно такие же рамки как в исходном коде */
+    #team .portrait-grid .portrait-card:not(.main) .portrait-frame {
+        background: rgba(255, 255, 255, 0.05) !important;
+        border: 4px solid #59f0ff !important;
+        padding: 25px !important;
+    }
+
+    /* Для больших карточек */
+    #team .portrait-grid .portrait-card.main .portrait-frame {
+        background: rgba(89, 240, 255, 0.05) !important;
+        border: 4px solid #59f0ff !important;
+        padding: 35px !important;
+        max-width: 250px !important;
+        min-height: 140px !important;
+    }
+
+    /* Стили для инициалов внутри рамки */
+    #team .portrait-grid .portrait-card .portrait-initials {
+        font-size: 48px !important;
+        line-height: 1 !important;
+    }
+
+    #team .portrait-grid .portrait-card.main .portrait-initials {
+        color: #59f0ff !important;
+    }
+
+    #team .portrait-grid .portrait-card:not(.main) .portrait-initials {
+        color: #ffffff !important;
+    }
+
+    /* Стили для текстовой информации */
+    #team .portrait-grid .portrait-card .portrait-info {
+        width: 100% !important;
+    }
+
+    #team .portrait-grid .portrait-card .portrait-info h3 {
+        color: #ffffff !important;
+        font-size: 18px !important;
+        font-weight: 600 !important;
+        margin-bottom: 8px !important;
+        line-height: 1.4 !important;
+    }
+
+    #team .portrait-grid .portrait-card.main .portrait-info h3 {
+        font-size: 22px !important;
+        margin-bottom: 10px !important;
+    }
+
+    #team .portrait-grid .portrait-card .portrait-info p {
+        color: rgba(255, 255, 255, 0.8) !important;
+        font-size: 16px !important;
+        line-height: 1.5 !important;
+        margin: 0 !important;
+        font-weight: 300 !important;
+    }
+
+    #team .portrait-grid .portrait-card.main .portrait-info p {
+        font-size: 18px !important;
+    }
+
+    /* HOVER ЭФФЕКТ - ДОБАВЛЕНО */
+    #team .portrait-grid .portrait-card:hover .portrait-frame {
+        border-color: var(--accent-2) !important; /* Изменение цвета рамки */
+        transform: rotate(5deg) scale(1.05) !important; /* Поворот и увеличение */
+        box-shadow: 0 15px 40px rgba(124, 107, 255, 0.3) !important; /* Тень */
+    }
+
+    /* Планшет - 2 колонки */
+    @media (max-width: 1200px) {
+        #team .portrait-grid {
+            grid-template-columns: repeat(2, 1fr) !important;
+        }
+
+        /* На планшете все карточки занимают по 1 колонке */
+        #team .portrait-grid .portrait-card.main,
+        #team .portrait-grid .portrait-card:not(.main) {
+            grid-column: span 1 !important;
+        }
+    }
+
+    /* Мобильные - 1 колонка */
+    @media (max-width: 768px) {
+        #team .portrait-grid {
+            grid-template-columns: 1fr !important;
+        }
+    }
+</style>
+
+    <div class="portrait-grid">
+        <?php while( have_rows('team_cards', $section_id) ): the_row();
+            $icon = get_sub_field('team_card_icon');
+            $name = get_sub_field('team_card_name');
+            $position = get_sub_field('team_card_position');
+            $type_raw = get_sub_field('team_card_type');
+
+            // ДЕТАЛЬНАЯ ОТЛАДКА ТИПА КАРТОЧКИ
+            $is_main = false;
+
+            // 1. Проверяем если это массив (ACF иногда так возвращает)
+            if(is_array($type_raw)) {
+                $type_value = $type_raw['value'] ?? $type_raw['label'] ?? '';
+                $is_main = ($type_value === 'main' || $type_value === 'Главная (большая)');
+            }
+            // 2. Проверяем если это строка
+            elseif(is_string($type_raw)) {
+                $type_lower = strtolower(trim($type_raw));
+                $is_main = (
+                    $type_lower === 'main' ||
+                    $type_lower === 'главная' ||
+                    strpos($type_lower, 'main') !== false ||
+                    strpos($type_lower, 'главная') !== false
+                );
+            }
+            // 3. Проверяем если это true/false значение
+            else {
+                $is_main = (bool) $type_raw;
+            }
+
+            $card_class = $is_main ? 'portrait-card main reveal' : 'portrait-card reveal';
+
+            // УБИРАЕМ инлайн стиль, так как рамки и фон теперь только у portrait-frame
+            $inline_style = '';
+
+            // Отладочный комментарий
+            echo '<!-- Card Debug: type_raw="' . htmlspecialchars(print_r($type_raw, true)) . '", is_main=' . ($is_main ? 'true' : 'false') . ', card_class=' . $card_class . ' -->';
+        ?>
+
+        <div class="<?php echo esc_attr($card_class); ?>" <?php echo $inline_style; ?>>
+            <?php if( $icon ): ?>
+                <div class="portrait-frame">
+                    <div class="portrait-initials"><?php echo esc_html($icon); ?></div>
                 </div>
+            <?php endif; ?>
+
+            <div class="portrait-info">
+                <?php if( $name ): ?>
+                    <h3>
+                        <?php
+                        $clean_name = strip_tags($name, '<strong><em><a><span><br>');
+                        $clean_name = str_replace(array('<p>', '</p>'), '', $clean_name);
+                        echo $clean_name;
+                        ?>
+                    </h3>
+                <?php endif; ?>
+
+                <?php if( $position ): ?>
+                    <p>
+                        <?php
+                        $clean_position = strip_tags($position, '<strong><em><a><span><br>');
+                        $clean_position = str_replace(array('<p>', '</p>'), '', $clean_position);
+                        echo $clean_position;
+                        ?>
+                    </p>
+                <?php endif; ?>
+            </div>
+        </div>
+
+        <?php endwhile; ?>
+    </div>
+<?php else: ?>
+    <!-- Если карточек нет, показываем статические -->
+    <div class="portrait-grid">
+        <div class="portrait-card main reveal">
+            <div class="portrait-frame">
+                <div class="portrait-initials">👔</div>
+            </div>
+            <div class="portrait-info">
+                <h3>Нужний Роман Андрійович</h3>
+                <p>Генеральний директор</p>
+            </div>
+        </div>
+        <div class="portrait-card main reveal">
+            <div class="portrait-frame">
+                <div class="portrait-initials">👨‍⚕️</div>
+            </div>
+            <div class="portrait-info">
+                <h3>Джаббаров Адалат Магомед Огли</h3>
+                <p>Медичний директор</p>
+            </div>
+        </div>
+        <div class="portrait-card reveal">
+            <div class="portrait-frame">
+                <div class="portrait-initials">💼</div>
+            </div>
+            <div class="portrait-info">
+                <h3>Михайлюченко Лідія Борисівна</h3>
+                <p>Заступник генерального директора з економічних питань</p>
+            </div>
+        </div>
+        <div class="portrait-card reveal">
+            <div class="portrait-frame">
+                <div class="portrait-initials">🏥</div>
+            </div>
+            <div class="portrait-info">
+                <h3>Попкова Оксана Валентинівна</h3>
+                <p>Завідувач диспансерного відділення</p>
+            </div>
+        </div>
+        <div class="portrait-card reveal">
+            <div class="portrait-frame">
+                <div class="portrait-initials">🫁</div>
+            </div>
+            <div class="portrait-info">
+                <h3>Дранник Антон Ігорович</h3>
+                <p>Завідувач Відділення легеневого туберкульозу №1</p>
+            </div>
+        </div>
+        <div class="portrait-card reveal">
+            <div class="portrait-frame">
+                <div class="portrait-initials">🩺</div>
+            </div>
+            <div class="portrait-info">
+                <h3>Нужна Олена Юріївна</h3>
+                <p>Завідувач амбулаторно-поліклінічного відділення</p>
+            </div>
+        </div>
+        <div class="portrait-card reveal">
+            <div class="portrait-frame">
+                <div class="portrait-initials">📷</div>
+            </div>
+            <div class="portrait-info">
+                <h3>Кучеренко Інна Ремівна</h3>
+                <p>Завідувач рентгендіагностичного відділення</p>
+            </div>
+        </div>
+        <div class="portrait-card reveal">
+            <div class="portrait-frame">
+                <div class="portrait-initials">👨‍⚕️</div>
+            </div>
+            <div class="portrait-info">
+                <h3>Ринковий Олександр Михайлович</h3>
+                <p>Головний медичний брат</p>
+            </div>
+        </div>
+    </div>
+<?php endif; ?>
+
+
             </div>
         </section>
 
