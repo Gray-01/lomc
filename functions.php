@@ -501,3 +501,23 @@ function hex2rgba($color, $opacity = false) {
 
     return $output;
 }
+
+// Чтобы изображения в карточках были нужного размера для рубрики новости
+add_action('after_setup_theme', 'custom_theme_setup');
+function custom_theme_setup() {
+    add_theme_support('post-thumbnails');
+
+    // Создаем свои размеры изображений
+    add_image_size('news-card', 400, 200, true); // 400x200 с обрезкой
+    add_image_size('news-detail', 800, 400, true);
+}
+
+// Добавляем новые размеры в выбор в медиабиблиотеке
+function custom_image_sizes($sizes) {
+    $addsizes = array(
+        "news-card" => __("Карточка новости"),
+        "news-detail" => __("Детальная новость")
+    );
+    return array_merge($sizes, $addsizes);
+}
+add_filter('image_size_names_choose', 'custom_image_sizes');
