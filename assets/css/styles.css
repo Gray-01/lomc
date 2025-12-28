@@ -1434,3 +1434,131 @@ h2 {
 .hidden {
     display: none;
 }
+
+/* стили для остатков wp */
+/* ===== Стили для страницы Залишки препаратів ===== */
+
+.medications-page {
+    padding-top: 120px;
+}
+
+.medications-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+}
+
+@media (max-width: 768px) {
+    .medications-list {
+        grid-template-columns: 1fr;
+    }
+}
+
+.medication-card {
+    background: var(--card);
+    border-radius: 16px;
+    padding: 24px;
+    border: 1px solid var(--border);
+    transition: all 0.3s ease;
+}
+
+.medication-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--accent);
+    box-shadow: 0 10px 30px rgba(89, 240, 255, 0.1);
+}
+
+.medication-date {
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-bottom: 12px;
+}
+
+.medication-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 16px;
+}
+
+.medication-files {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.medication-file {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background: var(--card-strong);
+    border-radius: 8px;
+    transition: background 0.2s ease;
+    flex-wrap: wrap;
+}
+
+.medication-file:hover {
+    background: rgba(89, 240, 255, 0.1);
+}
+
+.file-icon {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.file-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.file-name {
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 4px;
+    word-break: break-word;
+}
+
+.file-size {
+    font-size: 0.85rem;
+    color: var(--muted);
+}
+
+.file-download {
+    padding: 10px;
+    background: var(--accent);
+    color: #070c1a;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s ease, background 0.2s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    font-size: 1.2rem;
+}
+
+.file-download:hover {
+    transform: scale(1.1);
+    background: var(--accent-2);
+}
+
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--muted);
+}
+
+.empty-state-icon {
+    font-size: 4rem;
+    margin-bottom: 20px;
+}
+
+body.page-template-page-medications-php .noise-bg {
+    opacity: 0.45;
+}

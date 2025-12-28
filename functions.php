@@ -521,3 +521,74 @@ function custom_image_sizes($sizes) {
     return array_merge($sizes, $addsizes);
 }
 add_filter('image_size_names_choose', 'custom_image_sizes');
+
+
+// старт страницы остатки
+// старт страницы остатки
+// ===== ФУНКЦИЯ ДЛЯ СЛОЖНОЙ СТРУКТУРЫ ACF =====
+function get_medications_complex_data() {
+    // Ищем запись типа "Секции сайта"
+    $args = array(
+        'post_type' => 'site_sections', // ПРАВИЛЬНЫЙ SLUG
+        'title' => 'Залишки препаратів',
+        'post_status' => 'publish',
+        'posts_per_page' => 1
+    );
+
+    $query = new WP_Query($args);
+
+    if ($query->have_posts()) {
+        $query->the_post();
+        $section_id = get_the_ID();
+        $cards = get_field('medication_cards', $section_id);
+        wp_reset_postdata();
+
+        if (!$cards || !is_array($cards)) {
+            // Если нет карточек - возвращаем тестовую
+            return array(
+                array(
+                    'card_period' => 'Січень 2024',
+                    'card_title' => 'Залишки препаратів',
+                    'date_color' => '',
+                    'title_color' => '',
+                    'card_files' => array(
+                        array(
+                            'file_name' => 'Остатки_січень_2024.xlsx',
+                            'file' => null,
+                            'file_icon' => '📊'
+                        ),
+                        array(
+                            'file_name' => 'Звіт_січень_2024.pdf',
+                            'file' => null,
+                            'file_icon' => '📄'
+                        ),
+                        array(
+                            'file_name' => 'Додаток_січень_2024.docx',
+                            'file' => null,
+                            'file_icon' => '📝'
+                        )
+                    )
+                )
+            );
+        }
+
+        return $cards;
+    }
+
+    // Если запись не найдена
+    return array(
+        array(
+            'card_period' => 'Січень 2024',
+            'card_title' => 'Залишки препаратів',
+            'date_color' => '',
+            'title_color' => '',
+            'card_files' => array(
+                array(
+                    'file_name' => 'Остатки_січень_2024.xlsx',
+                    'file' => null,
+                    'file_icon' => '📊'
+                )
+            )
+        )
+    );
+}
